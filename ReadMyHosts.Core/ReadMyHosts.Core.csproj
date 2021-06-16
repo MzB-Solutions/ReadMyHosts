@@ -4,4 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PostSharp" Version="6.9.6" />
+    <PackageReference Include="PostSharp.Patterns.Common" Version="6.9.6" />
+    <PackageReference Include="PostSharp.Patterns.Diagnostics" Version="6.9.6" />
+    <PackageReference Include="PostSharp.Patterns.Diagnostics.Serilog" Version="6.9.6" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+  </ItemGroup>
+
 </Project>
