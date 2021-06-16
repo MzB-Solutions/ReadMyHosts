@@ -25,7 +25,7 @@ namespace ReadMyHosts.Commands
             // Do this to use default values
             handler.ReadFile();
 
-            MessageBox.Show(handler.HostList.ToString(), "Done", MessageBoxButton.OK);
+            //MessageBox.Show(handler.HostList.ToString(), "Done", MessageBoxButton.OK);
         }
     }
 }
