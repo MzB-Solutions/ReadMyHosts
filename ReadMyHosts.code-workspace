@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"fudge.auto-using",
+			"ms-dotnettools.csharp",
+			"felschr.extbundles-csharp",
+			"kreativ-software.csharpextensions",
+			"jorgeserrano.vscode-csharp-snippets",
+			"k--kato.docomment",
+			"kishoreithadi.dotnet-core-essentials",
+			"kiteco.kite",
+			"pkief.material-icon-theme",
+			"pkief.material-product-icons",
+			"tintoy.msbuild-project-tools",
+			"przemyslawonak.pimp-my-avalonia",
+			"craigthomas.supersharp",
+			"pflannery.vscode-versionlens",
+			"fernandoescolar.vscode-solution-explorer"
+		]
+	}
+}
