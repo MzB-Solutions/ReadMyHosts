@@ -11,7 +11,7 @@
 	<Design.DataContext>
 		<vm:MainWindowViewModel />
 	</Design.DataContext>
-	<Grid ColumnDefinitions="Auto,350,*" RowDefinitions="Auto,100,100,*">
+	<Grid ColumnDefinitions="Auto,200,Auto" RowDefinitions="Auto,80,50,Auto">
 		<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2" />
 		<Button FontFamily="monospace" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="2">Read My Hosts now ..</Button>
 	</Grid>

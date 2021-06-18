@@ -9,14 +9,6 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Views\MainWindow.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AvaloniaXaml Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </AvaloniaXaml>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.3" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.3" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.3" />
@@ -26,8 +18,13 @@
     <ProjectReference Include="..\ReadMyHosts.Core\ReadMyHosts.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <AvaloniaXaml Update="Views\MainWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </AvaloniaXaml>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Update="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <DependentUpon>MainWindow.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
