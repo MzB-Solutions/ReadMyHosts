@@ -11,8 +11,8 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <Panel>
+    <StackPanel>
         <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Button FontFamily="monospace" FontSize="16">Read My Hosts now ..</Button>
-    </Panel>
+    </StackPanel>
 </Window>
