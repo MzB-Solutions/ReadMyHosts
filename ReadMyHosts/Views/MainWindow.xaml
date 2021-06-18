@@ -8,11 +8,11 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="ReadMyHosts">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-    <Grid ColumnDefinitions="Auto,350,*" RowDefinitions="*,100,100,Auto">
-        <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
-        <Button FontFamily="monospace" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1">Read My Hosts now ..</Button>
-    </Grid>
+	<Design.DataContext>
+		<vm:MainWindowViewModel />
+	</Design.DataContext>
+	<Grid ColumnDefinitions="Auto,350,*" RowDefinitions="Auto,100,100,*">
+		<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2" />
+		<Button FontFamily="monospace" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="2">Read My Hosts now ..</Button>
+	</Grid>
 </Window>
