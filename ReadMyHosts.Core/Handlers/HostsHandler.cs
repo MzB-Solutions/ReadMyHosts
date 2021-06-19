@@ -25,9 +25,6 @@ namespace ReadMyHosts.Core.Handlers
 
         [Range(0, 255)]
         private int B4;
-
-        private string directorySeperator;
-
         private List<Host> hostList = new();
 
         //public HostsHandler(ILogger<HostsHandler> hostsHandlerLogger)
@@ -36,6 +33,9 @@ namespace ReadMyHosts.Core.Handlers
         //}
 
         public List<Host> HostList { get => hostList; set => hostList = value; }
+        
+        [Required]
+        public string DirectorySeparator { get; set; }
 
         private static byte[] ReturnIP(int a, int b, int c, int d)
         {
@@ -58,16 +58,16 @@ namespace ReadMyHosts.Core.Handlers
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                directorySeperator = "/";
+                DirectorySeparator = "/";
             }
             else
             {
-                directorySeperator = "\\";
+                DirectorySeparator = "\\";
             }
         }
         public void ReadFile(string rootPath, string path = "etc", string file = "hosts")
         {
-            string fullName = rootPath + path + directorySeperator + file;
+            string fullName = rootPath + path + DirectorySeparator + file;
             string line;
             int index = 0;
 

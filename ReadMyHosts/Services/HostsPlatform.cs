@@ -9,10 +9,13 @@ namespace ReadMyHosts.Services
     public class HostsPlatform
     {
 
-        private bool isLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-        private bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        private readonly bool isLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        private readonly bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
+        [Required]
+#pragma warning disable CS8618 // Disabled since we are using Required from PostSharp
         private string rootPath;
+#pragma warning restore CS8618 
 
         public string GetRootPath()
         {
@@ -30,7 +33,8 @@ namespace ReadMyHosts.Services
                 rootPath = "C:\\Windows\\System32\\drivers\\";
             }
             if (!isLinux&&!isWindows) {
-                // we should be throwing something here since we are running neither!!
+                // by virtue of using Required from PostSharp, something should be thrown here
+                rootPath = "";
             }
         }
 
