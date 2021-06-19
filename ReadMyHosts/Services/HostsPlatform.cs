@@ -33,7 +33,7 @@ namespace ReadMyHosts.Services
                 rootPath = "C:\\Windows\\System32\\drivers\\";
             }
             if (!isLinux&&!isWindows) {
-                // by virtue of using Required from PostSharp, something should be thrown here
+                // by virtue of using Required from PostSharp we get an exception of no valid OS found
                 rootPath = "";
             }
         }
