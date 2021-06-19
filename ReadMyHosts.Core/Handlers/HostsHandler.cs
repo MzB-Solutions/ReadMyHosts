@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 
 namespace ReadMyHosts.Core.Handlers
 {
@@ -24,6 +25,8 @@ namespace ReadMyHosts.Core.Handlers
 
         [Range(0, 255)]
         private int B4;
+
+        private string directorySeperator;
 
         private List<Host> hostList = new();
 
@@ -51,9 +54,20 @@ namespace ReadMyHosts.Core.Handlers
                 int.TryParse(ipBytes[2], System.Globalization.NumberStyles.Integer, null, result: out B3) ||
                 int.TryParse(ipBytes[3], System.Globalization.NumberStyles.Integer, null, result: out B4);
 
-        public void ReadFile(string path = "C:\\Windows\\System32\\drivers\\etc\\", string file = "hosts")
+        public HostsHandler()
         {
-            string fullName = path + file;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                directorySeperator = "/";
+            }
+            else
+            {
+                directorySeperator = "\\";
+            }
+        }
+        public void ReadFile(string rootPath, string path = "etc", string file = "hosts")
+        {
+            string fullName = rootPath + path + directorySeperator + file;
             string line;
             int index = 0;
 
