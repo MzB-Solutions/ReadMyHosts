@@ -69,9 +69,13 @@ namespace ReadMyHosts.Core.Handlers
                 string[] ipDigits;
                 string theHost;
                 string[] items = regex.Split(line);
+                bool isEnabled;
                 if (line.StartsWith("#"))
                 {
+                    isEnabled = false;
                     items = items.Where((item, index) => index != 0).ToArray();
+                } else {
+                    isEnabled = true;
                 }
                 ipDigits = items[0].Split('.');
                 theHost = items[1];
@@ -86,7 +90,7 @@ namespace ReadMyHosts.Core.Handlers
                 }
 
                 // create a content variable with the content from above
-                Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4) };
+                Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), IsEnabled = isEnabled};
 
                 // add the content to the DB
                 HostList.Add(content);

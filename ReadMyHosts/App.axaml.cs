@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ReadMyHosts.ViewModels;
 using ReadMyHosts.Views;
+using ReadMyHosts.Services;
 
 namespace ReadMyHosts
 {
@@ -17,9 +18,10 @@ namespace ReadMyHosts
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                var hostsPlatform = new HostsPlatform();
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = new MainWindowViewModel(hostsPlatform),
                 };
             }
 
