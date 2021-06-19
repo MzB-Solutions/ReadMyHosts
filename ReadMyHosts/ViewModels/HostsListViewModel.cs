@@ -12,5 +12,7 @@ namespace ReadMyHosts.ViewModels
         }
 
         public ObservableCollection<Host> Hosts { get; }
+
+        public string Greeting => "Welcome to Avalonia!";
     }
 }

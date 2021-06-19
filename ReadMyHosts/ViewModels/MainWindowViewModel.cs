@@ -14,8 +14,5 @@ namespace ReadMyHosts.ViewModels
 
         public HostsListViewModel List { get; }
 
-        public string Greeting => "Welcome to Avalonia!";
-
-        
     }
 }
