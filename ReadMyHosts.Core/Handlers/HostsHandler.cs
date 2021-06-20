@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 
 namespace ReadMyHosts.Core.Handlers
 {
@@ -24,7 +25,6 @@ namespace ReadMyHosts.Core.Handlers
 
         [Range(0, 255)]
         private int B4;
-
         private List<Host> hostList = new();
 
         //public HostsHandler(ILogger<HostsHandler> hostsHandlerLogger)
@@ -33,6 +33,9 @@ namespace ReadMyHosts.Core.Handlers
         //}
 
         public List<Host> HostList { get => hostList; set => hostList = value; }
+        
+        [Required]
+        public string DirectorySeparator { get; set; }
 
         private static byte[] ReturnIP(int a, int b, int c, int d)
         {
@@ -51,9 +54,20 @@ namespace ReadMyHosts.Core.Handlers
                 int.TryParse(ipBytes[2], System.Globalization.NumberStyles.Integer, null, result: out B3) ||
                 int.TryParse(ipBytes[3], System.Globalization.NumberStyles.Integer, null, result: out B4);
 
-        public void ReadFile(string path = "C:\\Windows\\System32\\drivers\\etc\\", string file = "hosts")
+        public HostsHandler()
         {
-            string fullName = path + file;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                DirectorySeparator = "/";
+            }
+            else
+            {
+                DirectorySeparator = "\\";
+            }
+        }
+        public void ReadFile(string rootPath, string path = "etc", string file = "hosts")
+        {
+            string fullName = rootPath + path + DirectorySeparator + file;
             string line;
             int index = 0;
 
@@ -69,9 +83,13 @@ namespace ReadMyHosts.Core.Handlers
                 string[] ipDigits;
                 string theHost;
                 string[] items = regex.Split(line);
+                bool isEnabled;
                 if (line.StartsWith("#"))
                 {
+                    isEnabled = false;
                     items = items.Where((item, index) => index != 0).ToArray();
+                } else {
+                    isEnabled = true;
                 }
                 ipDigits = items[0].Split('.');
                 theHost = items[1];
@@ -86,7 +104,7 @@ namespace ReadMyHosts.Core.Handlers
                 }
 
                 // create a content variable with the content from above
-                Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4) };
+                Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), IsEnabled = isEnabled};
 
                 // add the content to the DB
                 HostList.Add(content);
