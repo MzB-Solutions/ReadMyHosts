@@ -38,7 +38,6 @@ namespace ReadMyHosts.Services
             }
         }
 
-
         public IEnumerable<Host> GetData() {
             var handler = new HostsHandler();
             SetRootPath();
