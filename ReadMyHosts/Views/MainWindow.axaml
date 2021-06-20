@@ -8,5 +8,6 @@
 		x:Class="ReadMyHosts.Views.MainWindow"
 		Icon="/Assets/avalonia-logo.ico"
 		Title="ReadMyHosts"
-		Content="{Binding List}" />
+		Content="{Binding HostList}">
+</Window>
 	

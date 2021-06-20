@@ -9,10 +9,10 @@ namespace ReadMyHosts.ViewModels
     {
         public MainWindowViewModel(HostsPlatform hosts)
         {
-            List = new HostsListViewModel(hosts.GetData());
+            HostList = new HostListViewModel(hosts.GetData());
         }
 
-        public HostsListViewModel List { get; }
+        public HostListViewModel HostList { get; }
 
     }
 }

@@ -1,13 +1,13 @@
-using ReadMyHosts.Models;
+//using ReadMyHosts.Models;
 using ReadMyHosts.Core.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ReadMyHosts.ViewModels
 {
-    public class HostsListViewModel : ViewModelBase
+    public class HostListViewModel : ViewModelBase
     {
-        public HostsListViewModel(IEnumerable<Host> hosts) {
+        public HostListViewModel(IEnumerable<Host> hosts) {
             Hosts = new ObservableCollection<Host>(hosts);
         }
 

@@ -16,6 +16,7 @@ namespace ReadMyHosts
 
         public override void OnFrameworkInitializationCompleted()
         {
+            base.OnFrameworkInitializationCompleted();
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var hostsPlatform = new HostsPlatform();
@@ -25,7 +26,7 @@ namespace ReadMyHosts
                 };
             }
 
-            base.OnFrameworkInitializationCompleted();
+            
         }
     }
 }

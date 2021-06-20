@@ -8,7 +8,7 @@
 		<ItemsControl Items="{Binding Hosts}">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<CheckBox Margin="4" Content="{Binding HostName}" IsChecked="{Binding IsEnabled}"/>
+					<CheckBox Margin="4" Content="{Binding HostName}" IsChecked="{Binding IsEnabled}" />
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
