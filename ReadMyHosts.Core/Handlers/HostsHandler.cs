@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace ReadMyHosts.Core.Handlers
 {
@@ -25,12 +25,8 @@ namespace ReadMyHosts.Core.Handlers
 
         [Range(0, 255)]
         private int B4;
+        
         private List<Host> hostList = new();
-
-        //public HostsHandler(ILogger<HostsHandler> hostsHandlerLogger)
-        //{
-        //_hostsHandlerLogger = hostsHandlerLogger;
-        //}
 
         public List<Host> HostList { get => hostList; set => hostList = value; }
         
@@ -49,20 +45,24 @@ namespace ReadMyHosts.Core.Handlers
 
         // Basically parse all 4 strings into ints and if not successfull return false, otherwise true
         private bool ParseMyIP(string[] ipBytes) => 
-                int.TryParse(ipBytes[0], System.Globalization.NumberStyles.Integer, null, result: out B1) ||
-                int.TryParse(ipBytes[1], System.Globalization.NumberStyles.Integer, null, result: out B2) ||
-                int.TryParse(ipBytes[2], System.Globalization.NumberStyles.Integer, null, result: out B3) ||
-                int.TryParse(ipBytes[3], System.Globalization.NumberStyles.Integer, null, result: out B4);
+                int.TryParse(ipBytes[0], NumberStyles.Integer, null, out B1) ||
+                int.TryParse(ipBytes[1], NumberStyles.Integer, null, out B2) ||
+                int.TryParse(ipBytes[2], NumberStyles.Integer, null, out B3) ||
+                int.TryParse(ipBytes[3], NumberStyles.Integer, null, out B4);
 
         public HostsHandler()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (Core.IsLinux)
             {
                 DirectorySeparator = "/";
             }
-            else
+            if (Core.IsWindows)
             {
                 DirectorySeparator = "\\";
+            }
+            if (!Core.IsLinux&&!Core.IsWindows)
+            {
+                DirectorySeparator = String.Empty;
             }
         }
         public void ReadFile(string rootPath, string path = "etc", string file = "hosts")

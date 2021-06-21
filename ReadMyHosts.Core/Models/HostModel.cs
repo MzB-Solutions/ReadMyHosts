@@ -14,6 +14,7 @@ namespace ReadMyHosts.Core.Models
         [Required]
         public string HostName { get; set; }
 
+        [Required]
         public bool IsEnabled { get; set;}
     }
 }
