@@ -20,15 +20,15 @@ namespace ReadMyHosts.Services
 
         public void SetRootPath()
         {
-            if (Core.Core.IsLinux)
+            if (Core.Info.IsLinux)
             {
                 rootPath = "/";
             }
-            if (Core.Core.IsWindows)
+            if (Core.Info.IsWindows)
             {
                 rootPath = "C:\\Windows\\System32\\drivers\\";
             }
-            if (!Core.Core.IsLinux && !Core.Core.IsWindows) {
+            if (!Core.Info.IsLinux && !Core.Info.IsWindows) {
                 // by virtue of using Required from PostSharp we get an exception if no valid OS found
                 rootPath = "";
             }

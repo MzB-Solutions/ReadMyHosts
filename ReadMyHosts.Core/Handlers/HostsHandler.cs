@@ -50,17 +50,20 @@ namespace ReadMyHosts.Core.Handlers
                 int.TryParse(ipBytes[2], NumberStyles.Integer, null, out B3) ||
                 int.TryParse(ipBytes[3], NumberStyles.Integer, null, out B4);
 
+        /// <summary>
+        /// HostsHandler Constructor
+        /// </summary>
         public HostsHandler()
         {
-            if (Core.IsLinux)
+            if (Info.IsLinux)
             {
                 DirectorySeparator = "/";
             }
-            if (Core.IsWindows)
+            if (Info.IsWindows)
             {
                 DirectorySeparator = "\\";
             }
-            if (!Core.IsLinux&&!Core.IsWindows)
+            if (!Info.IsLinux&&!Info.IsWindows)
             {
                 DirectorySeparator = String.Empty;
             }
