@@ -1,13 +1,19 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using ReadMyHosts.ViewModels;
+using System;
 
 namespace ReadMyHosts
 {
     public class ViewLocator : IDataTemplate
     {
+        #region Public Properties
+
         public bool SupportsRecycling => false;
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public IControl Build(object data)
         {
@@ -28,5 +34,7 @@ namespace ReadMyHosts
         {
             return data is ViewModelBase;
         }
+
+        #endregion Public Methods
     }
 }

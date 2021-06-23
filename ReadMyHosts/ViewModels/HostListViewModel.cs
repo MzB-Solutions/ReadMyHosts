@@ -7,12 +7,20 @@ namespace ReadMyHosts.ViewModels
 {
     public class HostListViewModel : ViewModelBase
     {
-        public HostListViewModel(IEnumerable<Host> hosts) {
+        #region Public Constructors
+
+        public HostListViewModel(IEnumerable<Host> hosts)
+        {
             Hosts = new ObservableCollection<Host>(hosts);
         }
 
-        public ObservableCollection<Host> Hosts { get; }
+        #endregion Public Constructors
+
+        #region Public Properties
 
         public string Greeting => "Welcome to Avalonia!";
+        public ObservableCollection<Host> Hosts { get; }
+
+        #endregion Public Properties
     }
 }
