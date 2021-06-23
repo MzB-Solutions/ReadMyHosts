@@ -9,7 +9,7 @@
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
 					<CheckBox Margin="4" Content="{Binding HostName}" IsChecked="{Binding IsEnabled}">
-						<TextBox Text="{Binding FullIp.ToString}" />
+						<TextBox Text="{Binding FullIpText}" />
 					</CheckBox>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>

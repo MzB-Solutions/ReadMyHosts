@@ -76,7 +76,7 @@ namespace ReadMyHosts.Core.Handlers
                 }
 
                 // create a content variable with the content from above
-                Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), IsEnabled = isEnabled };
+                Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), FullIpText = ReturnIP(B1, B2, B3, B4).ToString(), IsEnabled = isEnabled };
 
                 // add the content to the DB
                 HostList.Add(content);
