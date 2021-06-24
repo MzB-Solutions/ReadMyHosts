@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       appVersion: v0.1
+      PostSharpLicense: ${{ secrets.PS_LICENSE }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
@@ -35,6 +36,7 @@ jobs:
     runs-on: windows-latest
     env:
       appVersion: v0.1
+      PostSharpLicense: ${{ secrets.PS_LICENSE }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
