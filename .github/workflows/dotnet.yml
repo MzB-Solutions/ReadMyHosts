@@ -28,7 +28,7 @@ jobs:
       - name: Pack Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: RMH-linux-${{ env.appVersion}}.${{GITHUB_RUN_NUMBER}}
+          name: RMH-linux-${{ env.appVersion}}.${{ env.GITHUB_RUN_NUMBER }}
           path: ${{ github.workspace }}/output/ # or path/to/artifact
           if-no-files-found: error
   build-windows:
@@ -50,6 +50,6 @@ jobs:
       - name: Pack Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: RMH-win32-${{ env.appVersion}}.${{GITHUB_RUN_NUMBER}}
+          name: RMH-win32-${{ env.appVersion}}.${{ env.GITHUB_RUN_NUMBER }}
           path: ${{ github.workspace }}/output/ # or path/to/artifact
           if-no-files-found: error
