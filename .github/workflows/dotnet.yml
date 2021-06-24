@@ -11,6 +11,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    env:
+      appVersion: v0.1
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
@@ -20,6 +22,11 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore
       - name: build
-        run: dotnet build --no-restore
+        run: dotnet build --no-restore -c Release -o ${{ github.workspace }}/output
       - name: Run tests
         run: dotnet test --no-build --verbosity normal
+      - uses: actions/upload-artifact@v2
+        with:
+          name: RMH-${{ env.appVersion}}.${GITHUB_RUN_NUMBER}
+          path: ${{ github.workspace }}/output/ # or path/to/artifact
+          if-no-files-found: error
