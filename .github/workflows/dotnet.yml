@@ -18,7 +18,7 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: Restore NuGet packages
-        run: dotnet Restore
+        run: dotnet restore
       - name: build
         run: dotnet build --no-restore
       - name: Run tests
