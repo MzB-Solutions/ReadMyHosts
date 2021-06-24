@@ -8,9 +8,10 @@
 		<ItemsControl Items="{Binding Hosts}">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<CheckBox Margin="4" Content="{Binding HostName}" IsChecked="{Binding IsEnabled}">
-						<TextBlock Text="{Binding FullIpText}" />
-					</CheckBox>
+					<StackPanel Orientation="Horizontal">
+						<CheckBox Margin="4" Content="{Binding HostName}" IsChecked="{Binding IsEnabled}" />
+						<TextBox Margin="4" Text="{Binding FullIpText}" />
+					</StackPanel>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
