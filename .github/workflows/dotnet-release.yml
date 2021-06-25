@@ -23,7 +23,7 @@ jobs:
             platform: linux
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      appVersion: v0.1_${{ matrix.platform }}
+      appVersion: v0.1c_${{ matrix.platform }}
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
     steps:
       - name: Checkout Project
