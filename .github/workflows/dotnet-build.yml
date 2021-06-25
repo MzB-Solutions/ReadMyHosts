@@ -1,15 +1,12 @@
-name: .NET Release
+name: .NET build
 
 on:
   push:
     branches:
-      - "main"
-  pull_request:
-    branches:
-      - "main"
+      - "dev"
 
 jobs:
-  build-linux:
+  build:
     runs-on: windows-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -22,10 +19,12 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
+      - name: Restore NuGet packages
+        run: dotnet restore
       - name: Build .NET for Linux
-        run: dotnet build -r linux-x64 -c Release -o ${{ github.workspace }}/output_linux
+        run: dotnet build --no-restore -r linux-x64 -c Debug -o ${{ github.workspace }}/output_linux
       - name: Build .NET for Windows
-        run: dotnet build -r win10-x64 -c Release -o ${{ github.workspace }}/output_win32
+        run: dotnet build --no-restore -r win10-x64 -c Debug -o ${{ github.workspace }}/output_win32
       - name: Run tests
         run: dotnet test --no-build --verbosity normal
       - name: Create Artifacts for Linux
@@ -40,12 +39,7 @@ jobs:
           name: RMH-win32-${{ env.appVersion}}.${{ env.GITHUB_RUN_NUMBER }}
           path: ${{ github.workspace }}/output_win32/ # or path/to/artifact
           if-no-files-found: error
-      - name: Pack Artifacts for Linux
+      - name: Pack Linux Artifacts
         run: 7z a -tzip ${{ github.workspace }}/RMH-linux-${{ env.appVersion }}.zip ${{ github.workspace }}/output_linux/ -r
-      - name: Pack Artifacts for Windows
+      - name: Pack Windows Artifacts
         run: 7z a -tzip ${{ github.workspace }}/RMH-win32-${{ env.appVersion }}.zip ${{ github.workspace }}/output_win32/ -r
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: ${{ github.workspace }}/RMH-win32-${{ env.appVersion }}.zip
