@@ -1,0 +1,42 @@
+name: .NET build on Windows
+
+on:
+  push:
+    branches:
+      - "dev"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      appVersion: v0.1
+      PostSharpLicense: ${{ secrets.PS_LICENSE }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Restore NuGet packages
+        run: dotnet restore
+      - name: build
+        run: dotnet build --no-restore -c Release -o ${{ github.workspace }}/output
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal
+      - name: Create Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: RMH-win32-${{ env.appVersion}}.${{ env.GITHUB_RUN_NUMBER }}
+          path: ${{ github.workspace }}/output/ # or path/to/artifact
+          if-no-files-found: error
+      - name: Pack Artifacts
+        run: 7z a -tzip ${{ github.workspace }}/RMH-win32-${{ env.appVersion }}.zip ${{ github.workspace }}/output/ -r
+      - name: Release Windows
+        uses: softprops/action-gh-release
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ${{ github.workspace }}/RMH-win32-${{ env.appVersion }}.zip
