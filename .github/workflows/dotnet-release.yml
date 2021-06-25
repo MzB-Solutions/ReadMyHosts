@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - "main"
+      - "!dev"
 
 jobs:
   build:
@@ -37,10 +38,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: RMH-${{ matrix.platform }}-${{ env.appVersion}}.${{ env.GITHUB_RUN_NUMBER }}
-          path: ${{ github.workspace }}/output_${{ matrix.platform }}/ # or path/to/artifact
+          path: ${{ github.workspace }}/output/ # or path/to/artifact
           if-no-files-found: error
       - name: Pack Linux Artifacts
-        run: 7z a -tzip ${{ github.workspace }}/RMH-${{ matrix.platform }}-${{ env.appVersion }}.zip ${{ github.workspace }}/output_${{ matrix.platform }}/ -r
+        run: 7z a -tzip ${{ github.workspace }}/RMH-${{ matrix.platform }}-${{ env.appVersion }}.zip ${{ github.workspace }}/output/ -r
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
