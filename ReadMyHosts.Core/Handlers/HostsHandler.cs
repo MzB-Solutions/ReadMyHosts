@@ -24,7 +24,7 @@ namespace ReadMyHosts.Core.Handlers
             Info.SetDirectorySeparator();
             Info.SetHostsRootPath();
         }
-
+        
         #endregion Public Constructors
 
         #region Public Properties
