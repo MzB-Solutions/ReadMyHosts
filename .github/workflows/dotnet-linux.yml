@@ -36,7 +36,7 @@ jobs:
       - name: Pack Artifacts
         run: 7z a -tzip ${{ github.workspace }}/RMH-linux-${{ env.appVersion }}.zip ${{ github.workspace }}/output/ -r
       - name: Release Linux
-        uses: softprops/action-gh-release
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: ${{ github.workspace }}/RMH-linux-${{ env.appVersion }}.zip
