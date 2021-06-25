@@ -42,7 +42,7 @@ namespace ReadMyHosts.Core.Handlers
             int index = 0;
 
             // Regex to search for 1 or more whitespaces (<= all Regex is Voodoo to me lol, thank you SO for this one)
-            Regex regex = new(@"\s+");
+            Regex whitespaceRegex = new(@"\s+");
 
             // open the filestream for reading
             // TODO(smzb): do a try loop here to catch stuff going wrong
@@ -52,8 +52,9 @@ namespace ReadMyHosts.Core.Handlers
             {
                 string[] ipDigits;
                 string theHost;
-                string[] items = regex.Split(line);
+                string[] items = whitespaceRegex.Split(line);
                 bool isEnabled;
+                bool isComment;
                 if (line.StartsWith("#"))
                 {
                     isEnabled = false;
@@ -63,24 +64,29 @@ namespace ReadMyHosts.Core.Handlers
                 {
                     isEnabled = true;
                 }
-                ipDigits = items[0].Split('.');
-                theHost = items[1];
+                // Check the first character of our string and see if it is a number, if not, the line is a comment
+                isComment = !char.IsDigit(items[0][0]);
+                if (!isComment) {
+                    ipDigits = items[0].Split('.');
+                    theHost = items[1];
 
-                if (!ParseMyIP(ipDigits))
-                {
-                    //_hostsHandlerLogger.LogDebug("Could NOT parse INTs!!");
-                    //}
-                    //else
-                    //{
-                    //_hostsHandlerLogger.LogDebug("Parsed INTs successfully");
+                    if (!ParseMyIP(ipDigits))
+                    {
+                        //_hostsHandlerLogger.LogDebug("Could NOT parse INTs!!");
+                        //}
+                        //else
+                        //{
+                        //_hostsHandlerLogger.LogDebug("Parsed INTs successfully");
+                    }
+
+                    // create a content variable with the content from above
+                    Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), FullIpText = items[0], IsEnabled = isEnabled };
+
+                    // add the content to the DB
+                    HostList.Add(content);
+                    index++;
                 }
-
-                // create a content variable with the content from above
-                Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), FullIpText = items[0], IsEnabled = isEnabled };
-
-                // add the content to the DB
-                HostList.Add(content);
-                index++;
+                
             }
         }
 
