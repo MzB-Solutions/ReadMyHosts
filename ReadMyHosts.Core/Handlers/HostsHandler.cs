@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ReadMyHosts.Core.Logger;
 
 namespace ReadMyHosts.Core.Handlers
 {
@@ -24,7 +25,7 @@ namespace ReadMyHosts.Core.Handlers
             Info.SetDirectorySeparator();
             Info.SetHostsRootPath();
         }
-        
+
         #endregion Public Constructors
 
         #region Public Properties
@@ -66,17 +67,18 @@ namespace ReadMyHosts.Core.Handlers
                 }
                 // Check the first character of our string and see if it is a number, if not, the line is a comment
                 isComment = !char.IsDigit(items[0][0]);
-                if (!isComment) {
+                if (!isComment)
+                {
                     ipDigits = items[0].Split('.');
                     theHost = items[1];
 
                     if (!ParseMyIP(ipDigits))
                     {
-                        //_hostsHandlerLogger.LogDebug("Could NOT parse INTs!!");
-                        //}
-                        //else
-                        //{
-                        //_hostsHandlerLogger.LogDebug("Parsed INTs successfully");
+                        Logger.Log.DebugLog.Debug("Could NOT parse INTs!!");
+                    }
+                    else
+                    {
+                        Logger.Log.DebugLog.Debug("Parsed INTs successfully");
                     }
 
                     // create a content variable with the content from above
@@ -86,7 +88,6 @@ namespace ReadMyHosts.Core.Handlers
                     HostList.Add(content);
                     index++;
                 }
-                
             }
         }
 
