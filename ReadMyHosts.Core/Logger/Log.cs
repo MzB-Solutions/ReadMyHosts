@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PostSharp.Patterns.Diagnostics;
+using PostSharp.Patterns.Diagnostics.Backends.Serilog;
 using Serilog;
 
 namespace ReadMyHosts.Core.Logger
@@ -21,14 +23,16 @@ namespace ReadMyHosts.Core.Logger
         public static void AppLogInit()
         {
             AppLog = new LoggerConfiguration()
-                .WriteTo.File("ReadMyHosts.log", rollingInterval: RollingInterval.Hour)
+                .WriteTo.File("./logs/RMH-App.log", rollingInterval: RollingInterval.Hour)
                 .CreateLogger();
+            LoggingServices.DefaultBackend = new SerilogLoggingBackend(AppLog);
         }
 
         public static void DebugLogInit()
         {
             DebugLog = new LoggerConfiguration()
                 .WriteTo.Debug()
+                .WriteTo.File("./logs/RMH-Debug.log", rollingInterval: RollingInterval.Hour)
                 .CreateLogger();
         }
 
@@ -39,5 +43,12 @@ namespace ReadMyHosts.Core.Logger
         }
 
         #endregion Public Methods
+
+        #region Private Fields
+
+        // The output template must include {Indent} for nice output.
+        private const string logTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Indent:l}{Message}{NewLine}{Exception}";
+
+        #endregion Private Fields
     }
 }

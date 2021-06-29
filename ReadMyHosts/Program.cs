@@ -1,6 +1,9 @@
 ﻿using ReadMyHosts.Core.Logger;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using PostSharp.Patterns.Diagnostics;
+
+[assembly: Log]
 
 namespace ReadMyHosts
 {
