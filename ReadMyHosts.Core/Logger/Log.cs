@@ -34,8 +34,8 @@ namespace ReadMyHosts.Core.Logger
 
         public static void FlushLogs()
         {
-            AppLog.Dispose();
-            DebugLog.Dispose();
+            //AppLog.Dispose();
+            //DebugLog.Dispose();
         }
 
         #endregion Public Methods
