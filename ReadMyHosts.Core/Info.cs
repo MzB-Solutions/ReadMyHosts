@@ -1,22 +1,63 @@
 ﻿using PostSharp.Patterns.Contracts;
 using PostSharp.Patterns.Diagnostics;
+using PostSharp.Patterns.Diagnostics.Backends.Serilog;
+using Serilog;
 using System;
 using System.Runtime.InteropServices;
 using static PostSharp.Patterns.Diagnostics.FormattedMessageBuilder;
 
+[assembly: Log]
+
 namespace ReadMyHosts.Core
 {
+    //[Log(AttributeExclude = true)]
     public class Info
     {
+        internal static bool IsDebug;
+
+        // The output template must include {Indent} for nice output.
+        private const string template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Indent:l}{Message}{NewLine}{Exception}";
+
+        private Serilog.Core.Logger _coreLog;
+
         #region Public Constructors
 
         public Info()
         {
+#if DEBUG
+            IsDebug = true;
+#else
+        IsDebug = false;
+#endif
+
+            if (!IsDebug)
+            {
+                _coreLog = new LoggerConfiguration()
+                    .MinimumLevel.Warning()
+                    .WriteTo.File("./log/App.log", outputTemplate: template, rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
+            }
+            else
+            {
+                _coreLog = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.Debug(outputTemplate: template)
+                    .WriteTo.File("./log/AppDebug.log", outputTemplate: template, rollingInterval: RollingInterval.Hour)
+                    .CreateLogger();
+            }
+
+            LoggingServices.DefaultBackend = new SerilogLoggingBackend(_coreLog);
+
             SetOS();
             SetHostsRootPath();
         }
 
         #endregion Public Constructors
+
+        ~Info()
+        {
+            _coreLog.Dispose();
+        }
 
         #region Public Properties
 

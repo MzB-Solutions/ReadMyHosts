@@ -73,11 +73,11 @@ namespace ReadMyHosts.Core.Handlers
 
                     if (!ParseMyIP(ipDigits))
                     {
-                        logSource.Warning.Write(Formatted("Could NOT parse INTs [{items[0]}]!!"));
+                        logSource.Warning.Write(Formatted("Could NOT parse INTs [{items[0]}]!!!"));
                     }
                     else
                     {
-                        logSource.Debug.Write(Formatted("Parsed INTs successfully"));
+                        logSource.Debug.Write(Formatted("Parsed INTs successfully!!!"));
                     }
 
                     // create a content variable with the content from above
