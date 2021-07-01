@@ -44,6 +44,7 @@ namespace ReadMyHosts
             {
                 _appLog = new LoggerConfiguration()
                     .MinimumLevel.Debug()
+                    .WriteTo.Debug(outputTemplate: template)
                     .WriteTo.File("./log/AppDebug.log", outputTemplate: template, rollingInterval: RollingInterval.Hour)
                     .CreateLogger();
             }
