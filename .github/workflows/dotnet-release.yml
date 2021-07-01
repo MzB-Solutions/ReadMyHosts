@@ -19,8 +19,10 @@ jobs:
         include:
           - os: windows-latest
             platform: win32
+            BuildConfig: Release
           - os: ubuntu-latest
             platform: linux
+            BuildConfig: Release
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       appVersion: v0.1c_${{ matrix.platform }}
@@ -33,7 +35,7 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: Build .NET
-        run: dotnet build -c Debug -o ${{ github.workspace }}/output
+        run: dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
         with:

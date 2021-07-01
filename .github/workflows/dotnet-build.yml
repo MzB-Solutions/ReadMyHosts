@@ -18,8 +18,10 @@ jobs:
         include:
           - os: windows-latest
             platform: win32
+            BuildConfig: Debug
           - os: ubuntu-latest
             platform: linux
+            BuildConfig: Debug
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       appVersion: v0.1c_${{ matrix.platform }}
@@ -34,7 +36,7 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore
       - name: Build .NET
-        run: dotnet build --no-restore -c Debug -o ${{ github.workspace }}/output
+        run: dotnet build --no-restore -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output
       - name: Run tests
         run: dotnet test --no-build --verbosity normal
       - name: Create Artifacts

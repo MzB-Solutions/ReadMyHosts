@@ -7,14 +7,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ReadMyHosts.Core.Logger;
 
 namespace ReadMyHosts.Core.Handlers
 {
     public class HostsHandler
     {
-        //private readonly ILogger<HostsHandler> _hostsHandlerLogger;
-
         #region Public Constructors
 
         /// <summary>
@@ -30,6 +27,7 @@ namespace ReadMyHosts.Core.Handlers
 
         #region Public Properties
 
+        //private readonly ILogger<HostsHandler> _hostsHandlerLogger;
         public List<Host> HostList { get => hostList; set => hostList = value; }
 
         #endregion Public Properties
@@ -74,11 +72,11 @@ namespace ReadMyHosts.Core.Handlers
 
                     if (!ParseMyIP(ipDigits))
                     {
-                        Logger.Log.DebugLog.Debug("Could NOT parse INTs!!");
+                        //CoreLogger.DebugLog.Debug("Could NOT parse INTs!!");
                     }
                     else
                     {
-                        Logger.Log.DebugLog.Debug("Parsed INTs successfully");
+                        //CoreLogger.DebugLog.Debug("Parsed INTs successfully");
                     }
 
                     // create a content variable with the content from above

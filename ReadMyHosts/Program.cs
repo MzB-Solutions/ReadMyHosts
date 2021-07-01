@@ -1,9 +1,6 @@
-﻿using ReadMyHosts.Core.Logger;
+﻿using ReadMyHosts.Core;
 using Avalonia;
 using Avalonia.ReactiveUI;
-using PostSharp.Patterns.Diagnostics;
-
-[assembly: Log]
 
 namespace ReadMyHosts
 {
@@ -23,9 +20,7 @@ namespace ReadMyHosts
         // yet and stuff might break.
         public static void Main(string[] args)
         {
-            Log.DebugLogInit();
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
-            Log.FlushLogs();
         }
 
         #endregion Public Methods
