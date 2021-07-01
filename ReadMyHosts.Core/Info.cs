@@ -1,6 +1,8 @@
 ﻿using PostSharp.Patterns.Contracts;
+using PostSharp.Patterns.Diagnostics;
 using System;
 using System.Runtime.InteropServices;
+using static PostSharp.Patterns.Diagnostics.FormattedMessageBuilder;
 
 namespace ReadMyHosts.Core
 {
@@ -28,8 +30,15 @@ namespace ReadMyHosts.Core
 
         #endregion Public Properties
 
+        #region Internal Fields
+
+        internal bool NeedsFix = false;
+
+        #endregion Internal Fields
+
         #region Private Fields
 
+        private static readonly LogSource logSource = LogSource.Get();
         private OSType SystemType;
 
         #endregion Private Fields
@@ -109,6 +118,7 @@ namespace ReadMyHosts.Core
             {
                 SystemType = OSType.None;
             }
+            logSource.Debug.Write(Formatted("The OS Type is {SystemType}"));
         }
 
         #endregion Private Methods

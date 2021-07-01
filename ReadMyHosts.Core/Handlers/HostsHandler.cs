@@ -1,5 +1,6 @@
 //using Microsoft.Extensions.Logging;
 using PostSharp.Patterns.Contracts;
+using PostSharp.Patterns.Diagnostics;
 using ReadMyHosts.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using static PostSharp.Patterns.Diagnostics.FormattedMessageBuilder;
 
 namespace ReadMyHosts.Core.Handlers
 {
@@ -71,11 +73,11 @@ namespace ReadMyHosts.Core.Handlers
 
                     if (!ParseMyIP(ipDigits))
                     {
-                        //CoreLogger.DebugLog.Debug("Could NOT parse INTs!!");
+                        logSource.Warning.Write(Formatted("Could NOT parse INTs [{items[0]}]!!"));
                     }
                     else
                     {
-                        //CoreLogger.DebugLog.Debug("Parsed INTs successfully");
+                        logSource.Debug.Write(Formatted("Parsed INTs successfully"));
                     }
 
                     // create a content variable with the content from above
@@ -91,6 +93,8 @@ namespace ReadMyHosts.Core.Handlers
         #endregion Public Methods
 
         #region Private Fields
+
+        private static readonly LogSource logSource = LogSource.Get();
 
         [Range(0, 255)]
         private int B1;
