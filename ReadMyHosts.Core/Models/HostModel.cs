@@ -10,6 +10,7 @@ namespace ReadMyHosts.Core.Models
         [Required]
         public byte[] FullIp { get; set; } = new byte[4];
 
+        [Required]
         public string FullIpText { get; set; }
 
         [Required]

@@ -1,4 +1,3 @@
-using ReadMyHosts.Core;
 using ReadMyHosts.Core.Handlers;
 using ReadMyHosts.Core.Models;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace ReadMyHosts.Services
         public IEnumerable<Host> GetData()
         {
             var handler = new HostsHandler();
-            handler.ReadFile(Info.RootPath);
+            handler.ReadFile(Program.SysInfo.RootPath);
             return handler.HostList;
         }
 

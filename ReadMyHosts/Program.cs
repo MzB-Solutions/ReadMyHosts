@@ -6,6 +6,12 @@ namespace ReadMyHosts
 {
     internal class Program
     {
+        #region Public Fields
+
+        public static Info SysInfo = new Info();
+
+        #endregion Public Fields
+
         #region Public Methods
 
         // Avalonia configuration, don't remove; also used by visual designer.

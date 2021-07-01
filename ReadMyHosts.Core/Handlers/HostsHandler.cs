@@ -19,8 +19,7 @@ namespace ReadMyHosts.Core.Handlers
         /// </summary>
         public HostsHandler()
         {
-            Info.SetDirectorySeparator();
-            Info.SetHostsRootPath();
+            SysInfo = new Info();
         }
 
         #endregion Public Constructors
@@ -36,7 +35,7 @@ namespace ReadMyHosts.Core.Handlers
 
         public void ReadFile(string rootPath, string path = "etc", string file = "hosts")
         {
-            string fullName = rootPath + path + Info.DirectorySeparator + file;
+            string fullName = rootPath + path + SysInfo.DirectorySeparator + file;
             string line;
             int index = 0;
 
@@ -63,7 +62,7 @@ namespace ReadMyHosts.Core.Handlers
                 {
                     isEnabled = true;
                 }
-                // Check the first character of our string and see if it is a number, if not, the line is a comment
+                // Check the first character of our string and see if it is a number, if not, the line is a comment (containing text)
                 isComment = !char.IsDigit(items[0][0]);
                 if (!isComment)
                 {
@@ -106,6 +105,7 @@ namespace ReadMyHosts.Core.Handlers
         private int B4;
 
         private List<Host> hostList = new();
+        private Core.Info SysInfo;
 
         #endregion Private Fields
 
@@ -121,7 +121,16 @@ namespace ReadMyHosts.Core.Handlers
             return ipDecimals;
         }
 
-        // Basically parse all 4 strings into ints and if not successfull return false, otherwise true
+        /// <summary>
+        /// parse all 4 strings
+        /// </summary>
+        /// <remarks>
+        /// we are using the 4 Variables B1-B4 as a reference type so that <see cref="int.TryParse(string?, out int)">TryParse gives us our ints
+        /// in them, as well as returning us false when one of them failed</see>
+        /// FYI: the return on this is a boolean OR, meaning if ANY fails (null return), set output false as a failure indication
+        /// </remarks>
+        /// <param name="ipBytes">string array containing (hopefully) some numeric input on all 4 elements</param>
+        /// <returns>Return false when one of the 4 strings could not be parsed into an <see cref="int">INT</see> type</returns>
         private bool ParseMyIP(string[] ipBytes) =>
                 int.TryParse(ipBytes[0], NumberStyles.Integer, null, out B1) ||
                 int.TryParse(ipBytes[1], NumberStyles.Integer, null, out B2) ||
