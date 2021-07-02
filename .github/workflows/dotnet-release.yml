@@ -44,6 +44,7 @@ jobs:
       
   build:
     runs-on: ${{ matrix.os }}
+    needs: [ sonarcloud ]
     strategy:
       fail-fast: true
       matrix:
@@ -53,7 +54,6 @@ jobs:
             platform: win32
             BuildConfig: Release
             DoSonar: true
-            needs: [ sonarcloud ]
           - os: ubuntu-latest
             platform: linux
             BuildConfig: Release
