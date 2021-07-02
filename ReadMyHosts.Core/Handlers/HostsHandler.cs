@@ -27,7 +27,6 @@ namespace ReadMyHosts.Core.Handlers
 
         #region Public Properties
 
-        //private readonly ILogger<HostsHandler> _hostsHandlerLogger;
         public List<Host> HostList { get => hostList; set => hostList = value; }
 
         #endregion Public Properties
@@ -97,6 +96,8 @@ namespace ReadMyHosts.Core.Handlers
 
         private static readonly LogSource logSource = LogSource.Get();
 
+        private readonly Core.Info SysInfo;
+
         [Range(0, 255)]
         private int B1;
 
@@ -110,7 +111,6 @@ namespace ReadMyHosts.Core.Handlers
         private int B4;
 
         private List<Host> hostList = new();
-        private Core.Info SysInfo;
 
         #endregion Private Fields
 

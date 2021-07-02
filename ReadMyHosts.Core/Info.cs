@@ -13,14 +13,6 @@ namespace ReadMyHosts.Core
     //[Log(AttributeExclude = true)]
     public class Info
     {
-        // The output template must include {Indent} for nice output.
-        private const string template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Indent:l}{Message}{NewLine}{Exception}";
-
-        private static bool IsDebug;
-        private Serilog.Core.Logger _coreLog;
-
-        #region Public Constructors
-
         public Info()
         {
 #if DEBUG
@@ -36,6 +28,7 @@ namespace ReadMyHosts.Core
                     .WriteTo.File("./log/App.log", outputTemplate: template, rollingInterval: RollingInterval.Day)
                     .CreateLogger();
             }
+
             if (IsDebug)
             {
                 _coreLog = new LoggerConfiguration()
@@ -43,127 +36,107 @@ namespace ReadMyHosts.Core
                     .WriteTo.Debug(outputTemplate: template)
                     .WriteTo.File("./log/AppDebug.log", outputTemplate: template, rollingInterval: RollingInterval.Day)
                     .CreateLogger();
-            }
+}
 
-            LoggingServices.DefaultBackend = new SerilogLoggingBackend(_coreLog);
+LoggingServices.DefaultBackend = new SerilogLoggingBackend(_coreLog);
 
-            SetOS();
-            SetHostsRootPath();
+SetOS();
+SetHostsRootPath();
         }
 
-        #endregion Public Constructors
+        public static bool IsDebug { get => isDebug; set => isDebug = value; }
 
-        ~Info()
-        {
-            //_coreLog.Dispose();
-        }
+public string CustomPath { get; set; }
 
-        #region Public Properties
+[Required]
+public string DirectorySeparator { get; set; }
 
-        public string CustomPath { get; set; }
+[Required]
+public string RootPath { get; set; }
 
-        [Required]
-        public string DirectorySeparator { get; set; }
+internal bool NeedsFix = false;
 
-        [Required]
-        public string RootPath { get; set; }
+// The output template must include {Indent} for nice output.
+private const string template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Indent:l}{Message}{NewLine}{Exception}";
 
-        #endregion Public Properties
+private static readonly LogSource logSource = LogSource.Get();
+private static bool isDebug;
+private readonly Serilog.Core.Logger _coreLog;
+private OsType SystemType;
 
-        #region Internal Fields
+[Flags]
+private enum OsType
+{
+    None = 0b_0000,
+    Windows = 0b_0001,
+    Linux = 0b_0010,
+    FreeBSD = 0b_0011,
+    OSX = 0b_00100
+}
 
-        internal bool NeedsFix = false;
+private void SetHostsRootPath()
+{
+    switch (SystemType)
+    {
+        case OsType.None:
+            // by virtue of using Required from PostSharp we get an exception if no valid OS found
+            RootPath = string.Empty;
+            DirectorySeparator = string.Empty;
+            logSource.Warning.Write(Formatted("The OS Type is [None]"));
+            break;
 
-        #endregion Internal Fields
+        case OsType.Windows:
+            DirectorySeparator = "\\";
+            RootPath = String.Format("C:{0}Windows{0}System32{0}drivers{0}", DirectorySeparator);
+            logSource.Debug.Write(Formatted("The OS Type is [Windows]"));
+            break;
 
-        #region Private Fields
+        case OsType.Linux:
+            DirectorySeparator = "/";
+            RootPath = "/";
+            logSource.Debug.Write(Formatted("The OS Type is [Linux]"));
+            break;
 
-        private static readonly LogSource logSource = LogSource.Get();
-        private OSType SystemType;
+        case OsType.FreeBSD:
+            DirectorySeparator = "/";
+            RootPath = "/";
+            logSource.Debug.Write(Formatted("The OS Type is [FreeBSD]"));
+            break;
 
-        #endregion Private Fields
+        case OsType.OSX:
+            throw new NotImplementedException();
 
-        #region Private Enums
+        default:
+            throw new AccessViolationException();
+    }
+}
 
-        [Flags]
-        private enum OSType
-        {
-            None = 0b_0000,
-            Windows = 0b_0001,
-            Linux = 0b_0010,
-            FreeBSD = 0b_0011,
-            OSX = 0b_00100
-        }
-
-        #endregion Private Enums
-
-        #region Private Methods
-
-        private void SetHostsRootPath()
-        {
-            switch (SystemType)
-            {
-                case OSType.None:
-                    // by virtue of using Required from PostSharp we get an exception if no valid OS found
-                    RootPath = string.Empty;
-                    DirectorySeparator = string.Empty;
-                    logSource.Warning.Write(Formatted("The OS Type is [None]"));
-                    break;
-
-                case OSType.Windows:
-                    DirectorySeparator = "\\";
-                    RootPath = String.Format("C:{0}Windows{0}System32{0}drivers{0}", DirectorySeparator);
-                    logSource.Debug.Write(Formatted("The OS Type is [Windows]"));
-                    break;
-
-                case OSType.Linux:
-                    DirectorySeparator = "/";
-                    RootPath = "/";
-                    logSource.Debug.Write(Formatted("The OS Type is [Linux]"));
-                    break;
-
-                case OSType.FreeBSD:
-                    DirectorySeparator = "/";
-                    RootPath = "/";
-                    logSource.Debug.Write(Formatted("The OS Type is [FreeBSD]"));
-                    break;
-
-                case OSType.OSX:
-                    throw new NotImplementedException();
-
-                default:
-                    throw new AccessViolationException();
-            }
-        }
-
-        private void SetOS()
-        {
-            bool IsBSD = RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
-            bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-            bool IsOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-            bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-            if (IsBSD)
-            {
-                SystemType = OSType.FreeBSD;
-            }
-            else if (IsLinux)
-            {
-                SystemType = OSType.Linux;
-            }
-            else if (IsOSX)
-            {
-                SystemType = OSType.OSX;
-            }
-            else if (IsWindows)
-            {
-                SystemType = OSType.Windows;
-            }
-            else
-            {
-                SystemType = OSType.None;
-            }
-        }
-
-        #endregion Private Methods
+private void SetOS()
+{
+    bool IsBSD = RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
+    bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    bool IsOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+    bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    if (IsBSD)
+    {
+        SystemType = OsType.FreeBSD;
+    }
+    else if (IsLinux)
+    {
+        SystemType = OsType.Linux;
+    }
+    else if (IsOSX)
+    {
+        SystemType = OsType.OSX;
+    }
+    else if (IsWindows)
+    {
+        SystemType = OsType.Windows;
+    }
+    else
+    {
+        SystemType = OsType.None;
+    }
+}
     }
 }
