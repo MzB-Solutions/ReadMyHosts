@@ -80,8 +80,7 @@ namespace ReadMyHosts.Core.Handlers
                     }
 
                     // create a content variable with the content from above
-                    // TODO(smzb): Get rid of this mad parsing during construction of our HostList
-                    Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), FullIpText = items[0], IsEnabled = isEnabled };
+                    Host content = new() { HostId = index, HostName = theHost, FullIpText = items[0], IsEnabled = isEnabled };
 
                     // add the content to the DB
                     HostList.Add(content);
@@ -98,33 +97,11 @@ namespace ReadMyHosts.Core.Handlers
 
         private readonly Core.Info SysInfo;
 
-        [Range(0, 255)]
-        private int B1;
-
-        [Range(0, 255)]
-        private int B2;
-
-        [Range(0, 255)]
-        private int B3;
-
-        [Range(0, 255)]
-        private int B4;
-
         private List<Host> hostList = new();
 
         #endregion Private Fields
 
         #region Private Methods
-
-        private static byte[] ReturnIP(int a, int b, int c, int d)
-        {
-            byte[] ipDecimals = { (byte)a, (byte)b, (byte)c, (byte)d };
-            for (int i = 0; i < ipDecimals.Length; i++)
-            {
-                ipDecimals[i] = ipDecimals[i];
-            }
-            return ipDecimals;
-        }
 
         /// <summary>
         /// parse all 4 strings
