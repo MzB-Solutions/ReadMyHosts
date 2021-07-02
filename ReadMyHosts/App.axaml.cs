@@ -4,7 +4,6 @@ using Avalonia.Markup.Xaml;
 using ReadMyHosts.Services;
 using ReadMyHosts.ViewModels;
 using ReadMyHosts.Views;
-using Serilog;
 
 namespace ReadMyHosts
 {

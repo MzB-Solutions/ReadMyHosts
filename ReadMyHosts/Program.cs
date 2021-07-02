@@ -1,9 +1,6 @@
 ﻿using ReadMyHosts.Core;
 using Avalonia;
 using Avalonia.ReactiveUI;
-using Serilog;
-using PostSharp.Patterns.Diagnostics;
-using PostSharp.Patterns.Diagnostics.Backends.Serilog;
 
 namespace ReadMyHosts
 {
