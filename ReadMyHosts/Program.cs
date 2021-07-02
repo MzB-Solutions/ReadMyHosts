@@ -41,6 +41,6 @@ namespace ReadMyHosts
 #endif
         }
 
-        private static bool IsDebug { get; set; } = false;
+        private static bool IsDebug { get; set; }
     }
 }
