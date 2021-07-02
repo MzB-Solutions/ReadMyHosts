@@ -41,7 +41,7 @@ jobs:
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: RMH-${{ matrix.platform }}-${{ env.appVersion}}.${{ env.GITHUB_RUN_NUMBER }}
+          name: RMH-${{ matrix.platform }}-${{ env.appVersion}}.${{ matrix.platform }}
           path: ${{ github.workspace }}/output/ # or path/to/artifact
           if-no-files-found: error
       - name: Pack Artifacts
