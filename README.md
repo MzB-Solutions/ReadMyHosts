@@ -38,7 +38,7 @@ logging etc..
 
 ## In the future
 
-  - This is going to be one of a few of tools, that is going to live under the mantle 
+- This is going to be one of a few of tools, that is going to live under the mantle
     of [SManager](https://github.com/MzB-Solutions/SManager)
 
   - Make another project, and run hosts edit as a console based application if wanted.
