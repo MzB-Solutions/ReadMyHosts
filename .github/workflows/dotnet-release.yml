@@ -69,7 +69,7 @@ jobs:
           New-Item -Path .\.sonar\scanner -ItemType Directory
       - name: Install Sonarcloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        run: dotnet tool -v m update dotnet-sonarscanner --tool-path .\.sonar\scanner
+        run: dotnet tool update -v m dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Linux-> Just build
         if: ${{ matrix.DoSonar == false }}
         run: dotnet build -v m -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
