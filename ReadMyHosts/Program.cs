@@ -36,8 +36,6 @@ namespace ReadMyHosts
 
 #if DEBUG
         private static readonly bool IsDebug = true;
-#else
-        private static readonly bool IsDebug = false;
 #endif
     }
 }
