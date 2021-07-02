@@ -81,6 +81,7 @@ namespace ReadMyHosts.Core.Handlers
                     }
 
                     // create a content variable with the content from above
+                    // TODO(smzb): Get rid of this mad parsing during construction of our HostList
                     Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), FullIpText = items[0], IsEnabled = isEnabled };
 
                     // add the content to the DB

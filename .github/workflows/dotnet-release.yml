@@ -5,13 +5,42 @@ on:
     branches:
       - "main"
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
       - "main"
       - "!dev"
 
 jobs:
+  sonarcloud:
+    name: Prepare Sonarcloud
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      
   build:
     runs-on: ${{ matrix.os }}
+    needs: [ sonarcloud ]
     strategy:
       fail-fast: true
       matrix:
@@ -20,32 +49,68 @@ jobs:
           - os: windows-latest
             platform: win32
             BuildConfig: Release
+            DoSonar: true
           - os: ubuntu-latest
             platform: linux
             BuildConfig: Release
+            DoSonar: false
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      appVersion: v0.1c_${{ matrix.platform }}
+      appVersion: v0.1d_${{ matrix.platform }}
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
     steps:
       - name: Checkout Project
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: 15
+          check-latest: true
+          distribution: zulu
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
-      - name: Build .NET
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Plain Release Build
         run: dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output
+      - name: Build and analyze
+        if: ${{ matrix.DoSonar == true }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"MzB-Solutions_ReadMyHosts" /o:"mzb-solutions" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/sonar_output/
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          Get-ChildItem -Path '\\?\${{ github.workspace }}/sonar_output/' -File -Recurse | Remove-Item -Verbose
+
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: RMH-${{ matrix.platform }}-${{ env.appVersion}}.${{ env.GITHUB_RUN_NUMBER }}
           path: ${{ github.workspace }}/output/ # or path/to/artifact
           if-no-files-found: error
-      - name: Pack Linux Artifacts
+      - name: Pack Artifacts
         run: 7z a -tzip ${{ github.workspace }}/RMH-${{ matrix.platform }}-${{ env.appVersion }}.zip ${{ github.workspace }}/output/ -r
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ github.workspace }}/RMH-win32-${{ env.appVersion }}.zip
+          #files: ${{ github.workspace }}/RMH-win32-${{ env.appVersion }}.zip
+          files: ${{ github.workspace }}/RMH-${{ matrix.platform }}-${{ env.appVersion }}.zip
