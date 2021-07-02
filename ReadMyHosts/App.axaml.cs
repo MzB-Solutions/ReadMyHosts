@@ -18,10 +18,10 @@ namespace ReadMyHosts
 
         public override void OnFrameworkInitializationCompleted()
         {
+            var hostsPlatform = new HostsService();
             base.OnFrameworkInitializationCompleted();
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var hostsPlatform = new HostsService();
                 desktop.MainWindow = new MainWindow
                 {
                     DataContext = new MainWindowViewModel(hostsPlatform),

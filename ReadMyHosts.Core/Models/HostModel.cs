@@ -6,10 +6,9 @@ namespace ReadMyHosts.Core.Models
     public class Host
     {
         #region Public Properties
-
-        [Required]
         public byte[] FullIp { get; set; } = new byte[4];
 
+        [Required]
         public string FullIpText { get; set; }
 
         [Required]

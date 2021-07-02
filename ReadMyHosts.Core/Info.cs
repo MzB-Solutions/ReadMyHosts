@@ -1,70 +1,141 @@
 ﻿using PostSharp.Patterns.Contracts;
+using PostSharp.Patterns.Diagnostics;
+using PostSharp.Patterns.Diagnostics.Backends.Serilog;
+using Serilog;
 using System;
 using System.Runtime.InteropServices;
+using static PostSharp.Patterns.Diagnostics.FormattedMessageBuilder;
+
+[assembly: Log]
 
 namespace ReadMyHosts.Core
 {
-    public static class Info
+    //[Log(AttributeExclude = true)]
+    public class Info
     {
-        #region Public Properties
-
-        [Required]
-        public static string DirectorySeparator { get; set; }
-
-        [Required]
-        public static string RootPath { get => rootPath; set => rootPath = value; }
-
-        #endregion Public Properties
-
-        #region Public Methods
-
-        public static void SetDirectorySeparator()
+        public Info()
         {
-            if (IsLinux)
+#if DEBUG
+            IsDebug = true;
+#else
+            IsDebug = false;
+#endif
+
+            if (!IsDebug)
             {
-                DirectorySeparator = "/";
+                _coreLog = new LoggerConfiguration()
+                    .MinimumLevel.Warning()
+                    .WriteTo.File("./log/App.log", outputTemplate: template, rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
             }
-            if (IsWindows)
+
+            if (IsDebug)
             {
-                DirectorySeparator = "\\";
+                _coreLog = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.Debug(outputTemplate: template)
+                    .WriteTo.File("./log/AppDebug.log", outputTemplate: template, rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
             }
-            if (!IsLinux && !IsWindows)
+
+            LoggingServices.DefaultBackend = new SerilogLoggingBackend(_coreLog);
+
+            SetOS();
+            SetHostsRootPath();
+        }
+
+        public static bool IsDebug { get; set; }
+
+        public string CustomPath { get; set; }
+
+        [Required]
+        public string DirectorySeparator { get; set; }
+
+        [Required]
+        public string RootPath { get; set; }
+
+        internal bool NeedsFix = false;
+
+        // The output template must include {Indent} for nice output.
+        private const string template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Indent:l}{Message}{NewLine}{Exception}";
+
+        private static readonly LogSource logSource = LogSource.Get();
+        private readonly Serilog.Core.Logger _coreLog;
+        private Systems SystemType;
+
+        [Flags]
+        private enum Systems
+        {
+            None = 0b_0000,
+            Windows = 0b_0001,
+            Linux = 0b_0010,
+            FreeBSD = 0b_0011,
+            OSX = 0b_00100
+        }
+
+        private void SetHostsRootPath()
+        {
+            switch (SystemType)
             {
-                DirectorySeparator = String.Empty;
+                case Systems.None:
+                    // by virtue of using Required from PostSharp we get an exception if no valid OS found
+                    RootPath = string.Empty;
+                    DirectorySeparator = string.Empty;
+                    logSource.Warning.Write(Formatted("The OS Type is [None]"));
+                    break;
+
+                case Systems.Windows:
+                    DirectorySeparator = "\\";
+                    RootPath = String.Format("C:{0}Windows{0}System32{0}drivers{0}", DirectorySeparator);
+                    logSource.Debug.Write(Formatted("The OS Type is [Windows]"));
+                    break;
+
+                case Systems.Linux:
+                    DirectorySeparator = "/";
+                    RootPath = "/";
+                    logSource.Debug.Write(Formatted("The OS Type is [Linux]"));
+                    break;
+
+                case Systems.FreeBSD:
+                    DirectorySeparator = "/";
+                    RootPath = "/";
+                    logSource.Debug.Write(Formatted("The OS Type is [FreeBSD]"));
+                    break;
+
+                case Systems.OSX:
+                    throw new NotImplementedException();
+
+                default:
+                    throw new AccessViolationException();
             }
         }
 
-        public static void SetHostsRootPath()
+        private void SetOS()
         {
-            if (IsLinux)
+            bool IsBSD = RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
+            bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+            bool IsOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+            bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            if (IsBSD)
             {
-                rootPath = "/";
+                SystemType = Systems.FreeBSD;
             }
-            if (IsWindows)
+            else if (IsLinux)
             {
-                rootPath = "C:\\Windows\\System32\\drivers\\";
+                SystemType = Systems.Linux;
             }
-            if (!IsLinux && !IsWindows)
+            else if (IsOSX)
             {
-                // by virtue of using Required from PostSharp we get an exception if no valid OS found
-                rootPath = "";
+                SystemType = Systems.OSX;
+            }
+            else if (IsWindows)
+            {
+                SystemType = Systems.Windows;
+            }
+            else
+            {
+                SystemType = Systems.None;
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Fields
-
-        private static string rootPath;
-
-        #endregion Private Fields
-
-        #region Private Properties
-
-        private static bool IsLinux { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-
-        private static bool IsWindows { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
-        #endregion Private Properties
     }
 }

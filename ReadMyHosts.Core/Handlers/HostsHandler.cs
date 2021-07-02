@@ -1,5 +1,5 @@
-//using Microsoft.Extensions.Logging;
 using PostSharp.Patterns.Contracts;
+using PostSharp.Patterns.Diagnostics;
 using ReadMyHosts.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -7,13 +7,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using static PostSharp.Patterns.Diagnostics.FormattedMessageBuilder;
 
 namespace ReadMyHosts.Core.Handlers
 {
     public class HostsHandler
     {
-        //private readonly ILogger<HostsHandler> _hostsHandlerLogger;
-
         #region Public Constructors
 
         /// <summary>
@@ -21,10 +20,9 @@ namespace ReadMyHosts.Core.Handlers
         /// </summary>
         public HostsHandler()
         {
-            Info.SetDirectorySeparator();
-            Info.SetHostsRootPath();
+            SysInfo = new Info();
         }
-        
+
         #endregion Public Constructors
 
         #region Public Properties
@@ -37,7 +35,7 @@ namespace ReadMyHosts.Core.Handlers
 
         public void ReadFile(string rootPath, string path = "etc", string file = "hosts")
         {
-            string fullName = rootPath + path + Info.DirectorySeparator + file;
+            string fullName = rootPath + path + SysInfo.DirectorySeparator + file;
             string line;
             int index = 0;
 
@@ -64,35 +62,41 @@ namespace ReadMyHosts.Core.Handlers
                 {
                     isEnabled = true;
                 }
-                // Check the first character of our string and see if it is a number, if not, the line is a comment
+                // Check the first character of our string and see if it is a number, if not, the line is a comment (containing text)
+                // TODO(smzb): make sure we also add normal comment lines into our final collection of type `List<Host> : IObservable`
                 isComment = !char.IsDigit(items[0][0]);
-                if (!isComment) {
+                if (!isComment)
+                {
                     ipDigits = items[0].Split('.');
                     theHost = items[1];
 
                     if (!ParseMyIP(ipDigits))
                     {
-                        //_hostsHandlerLogger.LogDebug("Could NOT parse INTs!!");
-                        //}
-                        //else
-                        //{
-                        //_hostsHandlerLogger.LogDebug("Parsed INTs successfully");
+                        logSource.Warning.Write(Formatted("Could NOT parse INTs [{items[0]}]!!!"));
+                    }
+                    else
+                    {
+                        logSource.Debug.Write(Formatted("Parsed INTs successfully!!!"));
                     }
 
                     // create a content variable with the content from above
+                    // TODO(smzb): Get rid of this mad parsing during construction of our HostList
                     Host content = new() { HostId = index, HostName = theHost, FullIp = ReturnIP(B1, B2, B3, B4), FullIpText = items[0], IsEnabled = isEnabled };
 
                     // add the content to the DB
                     HostList.Add(content);
                     index++;
                 }
-                
             }
         }
 
         #endregion Public Methods
 
         #region Private Fields
+
+        private static readonly LogSource logSource = LogSource.Get();
+
+        private readonly Core.Info SysInfo;
 
         [Range(0, 255)]
         private int B1;
@@ -122,7 +126,16 @@ namespace ReadMyHosts.Core.Handlers
             return ipDecimals;
         }
 
-        // Basically parse all 4 strings into ints and if not successfull return false, otherwise true
+        /// <summary>
+        /// parse all 4 strings
+        /// </summary>
+        /// <remarks>
+        /// we are using the 4 Variables B1-B4 as a reference type so that <see cref="int.TryParse(string?, out int)">TryParse gives us our ints
+        /// in them, as well as returning us false when one of them failed</see>
+        /// FYI: the return on this is a boolean OR, meaning if ANY fails (null return), set output false as a failure indication
+        /// </remarks>
+        /// <param name="ipBytes">string array containing (hopefully) some numeric input on all 4 elements</param>
+        /// <returns>Return false when one of the 4 strings could not be parsed into an <see cref="int">INT</see> type</returns>
         private bool ParseMyIP(string[] ipBytes) =>
                 int.TryParse(ipBytes[0], NumberStyles.Integer, null, out B1) ||
                 int.TryParse(ipBytes[1], NumberStyles.Integer, null, out B2) ||
