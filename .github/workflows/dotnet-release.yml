@@ -39,7 +39,7 @@ jobs:
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       
   build:
-    name: Build and Analyse
+    name: Build and/or Analyse
     runs-on: ${{ matrix.os }}
     needs: [ sonarcloud ]
     strategy:
