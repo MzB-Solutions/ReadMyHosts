@@ -4,7 +4,7 @@ using Avalonia.ReactiveUI;
 
 namespace ReadMyHosts
 {
-    internal class Program
+    internal static class Program
     {
         public static readonly Info SysInfo = new Info();
 
