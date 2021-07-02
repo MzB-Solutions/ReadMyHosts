@@ -1,4 +1,3 @@
-//using ReadMyHosts.Models;
 using ReadMyHosts.Core.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
