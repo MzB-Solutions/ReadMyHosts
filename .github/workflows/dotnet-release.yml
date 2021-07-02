@@ -22,11 +22,9 @@ jobs:
           - os: windows-latest
             platform: win32
             BuildConfig: Release
-            DoSonar: true
           - os: ubuntu-latest
             platform: linux
             BuildConfig: Release
-            DoSonar: false
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       appVersion: v0.1d_${{ matrix.platform }}
@@ -37,24 +35,32 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Cache SonarCloud packages
-        if: ${{ matrix.DoSonar == 'true' }}
+        if: ${{ matrix.platform == 'win32' }}
         uses: actions/cache@v1
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache SonarCloud scanner
-        if: ${{ matrix.DoSonar == 'true' }}
+        if: ${{ matrix.platform == 'win32' }}
         id: cache-sonar-scanner
         uses: actions/cache@v1
         with:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-      - uses: haya14busa/action-cond@v1
+      - name: Set SonarEnabled
+        uses: haya14busa/action-cond@v1
         id: SonarEnabled
         with:
-          cond: ${{ matrix.DoSonar == 'true' && steps.cache-sonar-scanner.outputs.cache-hit != 'true' }}
+          cond: ${{ matrix.DoSonar == 'true' }}
+          if_true: true
+          if_false: false
+      - name: Set SonarCached
+        uses: haya14busa/action-cond@v1
+        id: SonarCached
+        with:
+          cond: ${{ steps.cache-sonar-scanner.outputs.cache-hit == 'true' }}
           if_true: true
           if_false: false
       - name: Set up JDK 15
@@ -74,7 +80,7 @@ jobs:
       #  run: |
       #    New-Item -Path .\.sonar\scanner -ItemType Directory
       - name: Install Sonarcloud scanner
-        if: ${{ steps.SonarEnabled.outputs.value == 'true' }}
+        if: ${{ steps.SonarCached.outputs.value == 'false' }} && ${{ steps.SonarEnabled.outputs.value == 'true' }}
         run: dotnet tool update -v m dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Linux-> Just build
         if: ${{ steps.SonarEnabled.outputs.value == 'false' }}
