@@ -3,7 +3,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ReadMyHosts.Views
 {
-    public partial class HostListView : UserControl
+    public class HostListView : UserControl
     {
         #region Public Constructors
 
