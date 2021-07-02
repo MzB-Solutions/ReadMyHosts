@@ -54,7 +54,7 @@ jobs:
       - uses: haya14busa/action-cond@v1
         id: SonarEnabled
         with:
-          cond: ${{ matrix.DoSonar == 'true' }} && ${{ steps.cache-sonar-scanner.outputs.cache-hit != 'true' }}
+          cond: ${{ matrix.DoSonar == 'true' && steps.cache-sonar-scanner.outputs.cache-hit != 'true' }}
           if_true: true
           if_false: false
       - name: Set up JDK 15
