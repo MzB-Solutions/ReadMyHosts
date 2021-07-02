@@ -61,10 +61,10 @@ namespace ReadMyHosts.Core
 
         private static readonly LogSource logSource = LogSource.Get();
         private readonly Serilog.Core.Logger _coreLog;
-        private OsType SystemType;
+        private Systems SystemType;
 
         [Flags]
-        private enum OsType
+        private enum Systems
         {
             None = 0b_0000,
             Windows = 0b_0001,
@@ -77,32 +77,32 @@ namespace ReadMyHosts.Core
         {
             switch (SystemType)
             {
-                case OsType.None:
+                case Systems.None:
                     // by virtue of using Required from PostSharp we get an exception if no valid OS found
                     RootPath = string.Empty;
                     DirectorySeparator = string.Empty;
                     logSource.Warning.Write(Formatted("The OS Type is [None]"));
                     break;
 
-                case OsType.Windows:
+                case Systems.Windows:
                     DirectorySeparator = "\\";
                     RootPath = String.Format("C:{0}Windows{0}System32{0}drivers{0}", DirectorySeparator);
                     logSource.Debug.Write(Formatted("The OS Type is [Windows]"));
                     break;
 
-                case OsType.Linux:
+                case Systems.Linux:
                     DirectorySeparator = "/";
                     RootPath = "/";
                     logSource.Debug.Write(Formatted("The OS Type is [Linux]"));
                     break;
 
-                case OsType.FreeBSD:
+                case Systems.FreeBSD:
                     DirectorySeparator = "/";
                     RootPath = "/";
                     logSource.Debug.Write(Formatted("The OS Type is [FreeBSD]"));
                     break;
 
-                case OsType.OSX:
+                case Systems.OSX:
                     throw new NotImplementedException();
 
                 default:
@@ -118,23 +118,23 @@ namespace ReadMyHosts.Core
             bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             if (IsBSD)
             {
-                SystemType = OsType.FreeBSD;
+                SystemType = Systems.FreeBSD;
             }
             else if (IsLinux)
             {
-                SystemType = OsType.Linux;
+                SystemType = Systems.Linux;
             }
             else if (IsOSX)
             {
-                SystemType = OsType.OSX;
+                SystemType = Systems.OSX;
             }
             else if (IsWindows)
             {
-                SystemType = OsType.Windows;
+                SystemType = Systems.Windows;
             }
             else
             {
-                SystemType = OsType.None;
+                SystemType = Systems.None;
             }
         }
     }
