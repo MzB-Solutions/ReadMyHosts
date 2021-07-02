@@ -6,7 +6,7 @@ namespace ReadMyHosts
 {
     internal class Program
     {
-        public static Info SysInfo = new Info();
+        public static readonly Info SysInfo = new Info();
 
         public Program()
         {
