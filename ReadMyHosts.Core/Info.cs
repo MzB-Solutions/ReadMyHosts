@@ -13,11 +13,10 @@ namespace ReadMyHosts.Core
     //[Log(AttributeExclude = true)]
     public class Info
     {
-        internal static bool IsDebug;
-
         // The output template must include {Indent} for nice output.
         private const string template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Indent:l}{Message}{NewLine}{Exception}";
 
+        private static bool IsDebug;
         private Serilog.Core.Logger _coreLog;
 
         #region Public Constructors

@@ -36,7 +36,7 @@ jobs:
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          dotnet tool -v m update dotnet-sonarscanner --tool-path .\.sonar\scanner
       
   build:
     name: Build and/or Analyse
@@ -89,7 +89,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Linux-> Just build
         if: ${{ matrix.DoSonar == false }}
-        run: dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
+        run: dotnet build -v m -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
       - name: Windows-> Build and analyze
         if: ${{ matrix.DoSonar == true }}
         env:
@@ -98,7 +98,7 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"MzB-Solutions_ReadMyHosts" /o:"mzb-solutions" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
+          dotnet build -v m -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
