@@ -39,6 +39,7 @@ jobs:
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       
   build:
+    name: Build and Analyse
     runs-on: ${{ matrix.os }}
     needs: [ sonarcloud ]
     strategy:
@@ -86,9 +87,10 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Plain Release Build
-        run: dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output
-      - name: Build and analyze
+      - name: Linux-> Just build
+        if: ${{ matrix.DoSonar == false }}
+        run: dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
+      - name: Windows-> Build and analyze
         if: ${{ matrix.DoSonar == true }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -96,10 +98,8 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"MzB-Solutions_ReadMyHosts" /o:"mzb-solutions" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/sonar_output/
+          dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-          Get-ChildItem -Path '\\?\${{ github.workspace }}/sonar_output/' -File -Recurse | Remove-Item -Verbose
-
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
         with:
