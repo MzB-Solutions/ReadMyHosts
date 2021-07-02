@@ -54,8 +54,6 @@ namespace ReadMyHosts.Core
         [Required]
         public string RootPath { get; set; }
 
-        internal bool NeedsFix = false;
-
         // The output template must include {Indent} for nice output.
         private const string template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Indent:l}{Message}{NewLine}{Exception}";
 
