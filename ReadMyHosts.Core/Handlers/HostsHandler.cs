@@ -33,6 +33,7 @@ namespace ReadMyHosts.Core.Handlers
 
         #region Public Methods
 
+        // TODO(mitoskalandiel): ReadFile should NOT be passed parameters: see #12
         public void ReadFile(string rootPath, string path = "etc", string file = "hosts")
         {
             string fullName = rootPath + path + SysInfo.DirectorySeparator + file;
