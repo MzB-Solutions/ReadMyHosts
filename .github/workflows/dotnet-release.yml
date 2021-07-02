@@ -80,7 +80,7 @@ jobs:
       #  run: |
       #    New-Item -Path .\.sonar\scanner -ItemType Directory
       - name: Install Sonarcloud scanner
-        if: ${{ steps.SonarCached.outputs.value == 'false' }} && ${{ steps.SonarEnabled.outputs.value == 'true' }}
+        if: ${{ steps.SonarCached.outputs.value == 'false' && steps.SonarEnabled.outputs.value == 'true' }}
         run: dotnet tool update -v m dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Linux-> Just build
         if: ${{ steps.SonarEnabled.outputs.value == 'false' }}
