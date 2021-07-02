@@ -27,7 +27,7 @@ Upon execution ***everything*** will be logged in the ./log/ directory
 
 This is the production download, it only logs when errors occur,
 but does this as Verbose as needed.
-  - (Note the Appyyyymmdd.log filename (no "Debug"))
+- (Note the Appyyyymmdd.log filename (no "Debug"))
 
   - based on this github workflow: [https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml]
 
