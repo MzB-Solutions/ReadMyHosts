@@ -34,37 +34,37 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set SonarEnabled
+        uses: haya14busa/action-cond@v1
+        id: SonarEnabled
+        with:
+          cond: ${{ matrix.DoSonar == 'true' }}
+          if_true: 1
+          if_false: 0
       - name: Cache SonarCloud packages
-        if: ${{ matrix.platform == 'win32' }}
+        if: ${{ steps.SonarEnabled.outputs.value == 1 }}
         uses: actions/cache@v1
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache SonarCloud scanner
-        if: ${{ matrix.platform == 'win32' }}
+        if: ${{ steps.SonarEnabled.outputs.value == 1 }}
         id: cache-sonar-scanner
         uses: actions/cache@v1
         with:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Set SonarEnabled
-        uses: haya14busa/action-cond@v1
-        id: SonarEnabled
-        with:
-          cond: ${{ matrix.DoSonar == 'true' }}
-          if_true: true
-          if_false: false
       - name: Set SonarCached
         uses: haya14busa/action-cond@v1
         id: SonarCached
         with:
           cond: ${{ steps.cache-sonar-scanner.outputs.cache-hit == 'true' }}
-          if_true: true
-          if_false: false
+          if_true: 1
+          if_false: 0
       - name: Set up JDK 15
-        if: ${{ steps.SonarEnabled.outputs.value == 'true' }}
+        if: ${{ steps.SonarEnabled.outputs.value == 1 }}
         uses: actions/setup-java@v2
         with:
           java-version: 15
@@ -80,13 +80,13 @@ jobs:
       #  run: |
       #    New-Item -Path .\.sonar\scanner -ItemType Directory
       - name: Install Sonarcloud scanner
-        if: ${{ steps.SonarCached.outputs.value == 'false' && steps.SonarEnabled.outputs.value == 'true' }}
+        if: ${{ steps.SonarEnabled.outputs.value == 1 }}
         run: dotnet tool update -v m dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Linux-> Just build
-        if: ${{ steps.SonarEnabled.outputs.value == 'false' }}
+        if: ${{ steps.SonarEnabled.outputs.value == 0 }}
         run: dotnet build -v m -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
       - name: Windows-> Build and analyze
-        if: ${{ steps.SonarEnabled.outputs.value == 'true' }}
+        if: ${{ steps.SonarEnabled.outputs.value == 1 }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
