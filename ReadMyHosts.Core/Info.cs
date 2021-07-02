@@ -27,7 +27,7 @@ namespace ReadMyHosts.Core
 #if DEBUG
             IsDebug = true;
 #else
-        IsDebug = false;
+            IsDebug = false;
 #endif
 
             if (!IsDebug)
@@ -42,7 +42,7 @@ namespace ReadMyHosts.Core
                 _coreLog = new LoggerConfiguration()
                     .MinimumLevel.Debug()
                     .WriteTo.Debug(outputTemplate: template)
-                    .WriteTo.File("./log/AppDebug.log", outputTemplate: template, rollingInterval: RollingInterval.Hour)
+                    .WriteTo.File("./log/AppDebug.log", outputTemplate: template, rollingInterval: RollingInterval.Day)
                     .CreateLogger();
             }
 
@@ -56,7 +56,7 @@ namespace ReadMyHosts.Core
 
         ~Info()
         {
-            _coreLog.Dispose();
+            //_coreLog.Dispose();
         }
 
         #region Public Properties
@@ -108,21 +108,25 @@ namespace ReadMyHosts.Core
                     // by virtue of using Required from PostSharp we get an exception if no valid OS found
                     RootPath = string.Empty;
                     DirectorySeparator = string.Empty;
+                    logSource.Warning.Write(Formatted("The OS Type is [None]"));
                     break;
 
                 case OSType.Windows:
                     DirectorySeparator = "\\";
                     RootPath = String.Format("C:{0}Windows{0}System32{0}drivers{0}", DirectorySeparator);
+                    logSource.Debug.Write(Formatted("The OS Type is [Windows]"));
                     break;
 
                 case OSType.Linux:
                     DirectorySeparator = "/";
                     RootPath = "/";
+                    logSource.Debug.Write(Formatted("The OS Type is [Linux]"));
                     break;
 
                 case OSType.FreeBSD:
                     DirectorySeparator = "/";
                     RootPath = "/";
+                    logSource.Debug.Write(Formatted("The OS Type is [FreeBSD]"));
                     break;
 
                 case OSType.OSX:
@@ -159,7 +163,6 @@ namespace ReadMyHosts.Core
             {
                 SystemType = OSType.None;
             }
-            logSource.Debug.Write(Formatted("The OS Type is {SystemType}"));
         }
 
         #endregion Private Methods
