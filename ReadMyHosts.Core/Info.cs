@@ -37,7 +37,7 @@ namespace ReadMyHosts.Core
                     .WriteTo.File("./log/App.log", outputTemplate: template, rollingInterval: RollingInterval.Day)
                     .CreateLogger();
             }
-            else
+            if (IsDebug)
             {
                 _coreLog = new LoggerConfiguration()
                     .MinimumLevel.Debug()
