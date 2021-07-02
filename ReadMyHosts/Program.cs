@@ -34,15 +34,10 @@ namespace ReadMyHosts
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
-        protected Program()
-        {
 #if DEBUG
-            IsDebug = true;
+        private static readonly bool IsDebug = true;
 #else
-            IsDebug = false;
+        private static readonly bool IsDebug = false;
 #endif
-        }
-
-        private static bool IsDebug;
     }
 }
