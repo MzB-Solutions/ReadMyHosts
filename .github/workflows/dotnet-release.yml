@@ -63,9 +63,7 @@ jobs:
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Install SonarCloud scanner
-        if: |
-          steps.cache-sonar-scanner.outputs.cache-hit != 'true' &&
-          ${{ matrix.DoSonar == true }}
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true' && ${{ matrix.DoSonar == true }}
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
