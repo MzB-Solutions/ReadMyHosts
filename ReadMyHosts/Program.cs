@@ -1,4 +1,4 @@
-﻿using ReadMyHosts.Core;
+using ReadMyHosts.Core;
 using Avalonia;
 using Avalonia.ReactiveUI;
 
