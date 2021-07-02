@@ -32,7 +32,7 @@ jobs:
         if: ${{ matrix.platform == 'win32' }}
         shell: powershell
         run: |
-          Get-ChildItem C:\Program Files\dotnet\
+          Get-ChildItem 'C:\Program Files\dotnet\'
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
