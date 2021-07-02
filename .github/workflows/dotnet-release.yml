@@ -87,7 +87,6 @@ jobs:
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Plain Release Build
-        if: ${{ matrix.DoSonar == false}}
         run: dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output
       - name: Build and analyze
         if: ${{ matrix.DoSonar == true }}
@@ -97,8 +96,10 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"MzB-Solutions_ReadMyHosts" /o:"mzb-solutions" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output
+          dotnet build -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/sonar_output/
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          Get-ChildItem -Path '\\?\${{ github.workspace }}/sonar_output/' -File -Recurse | Remove-Item -Verbose
+
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
         with:
