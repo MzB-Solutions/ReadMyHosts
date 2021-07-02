@@ -4,10 +4,16 @@ using Avalonia.ReactiveUI;
 
 namespace ReadMyHosts
 {
-    internal static class Program
+    internal class Program
     {
+        public Program()
+        {
+#if DEBUG
+        IsDebug = true;
+#endif
+        }
         public static readonly Info SysInfo = new Info();
-
+        private static bool IsDebug { get; set; } = false;
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
         {
@@ -34,8 +40,5 @@ namespace ReadMyHosts
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
-#if DEBUG
-        private static readonly bool IsDebug = true;
-#endif
     }
 }
