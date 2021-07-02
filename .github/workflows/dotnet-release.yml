@@ -62,13 +62,13 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Prepare SonarCloud scanner
-        if: ${{ matrix.DoSonar == true }}
-        shell: powershell
-        run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
+      #- name: Prepare SonarCloud scanner
+      #  if: ${{ matrix.DoSonar == true }}
+      #  shell: powershell
+      #  run: |
+      #    New-Item -Path .\.sonar\scanner -ItemType Directory
       - name: Install Sonarcloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        if: ${{ steps.cache-sonar-scanner.outputs.cache-hit != 'true' }} && ${{ matrix.DoSonar == true }}
         run: dotnet tool update -v m dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Linux-> Just build
         if: ${{ matrix.DoSonar == false }}
