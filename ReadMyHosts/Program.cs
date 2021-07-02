@@ -37,7 +37,7 @@ namespace ReadMyHosts
 #if DEBUG
             IsDebug = true;
 #else
-        IsDebug = false;
+            IsDebug = false;
 #endif
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }

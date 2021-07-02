@@ -1,4 +1,3 @@
-//using Microsoft.Extensions.Logging;
 using PostSharp.Patterns.Contracts;
 using PostSharp.Patterns.Diagnostics;
 using ReadMyHosts.Core.Models;
@@ -65,6 +64,7 @@ namespace ReadMyHosts.Core.Handlers
                     isEnabled = true;
                 }
                 // Check the first character of our string and see if it is a number, if not, the line is a comment (containing text)
+                // TODO(smzb): make sure we also add normal comment lines into our final collection of type `List<Host> : IObservable`
                 isComment = !char.IsDigit(items[0][0]);
                 if (!isComment)
                 {
