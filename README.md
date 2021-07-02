@@ -18,6 +18,7 @@ ReadMyHosts (**RMH**) is a software to handle the windows/linux hosts file
 You should only ever need a `Build` download, if you need to debug on your own machine.
 This guy has been build under Debug Configuration over the whole solution. 
 Upon execution ***everything*** will be logged in the ./log/ directory
+
   - (Note the App**Debug**yyyymmdd.log filename)
 
   - based on this github workflow: [https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-build.yml]
