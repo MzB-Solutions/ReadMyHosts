@@ -21,7 +21,7 @@ Upon execution ***everything*** will be logged in the ./log/ directory
 
   - (Note the App**Debug**yyyymmdd.log filename)
 
-  - based on this github workflow: [https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-build.yml]
+- based on this github workflow: [https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-build.yml]
 
 ### dotnet-release.yml
 
