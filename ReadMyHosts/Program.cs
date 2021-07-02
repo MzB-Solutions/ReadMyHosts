@@ -8,15 +8,6 @@ namespace ReadMyHosts
     {
         public static readonly Info SysInfo = new Info();
 
-        public Program()
-        {
-#if DEBUG
-            IsDebug = true;
-#else
-            IsDebug = false;
-#endif
-        }
-
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
         {
@@ -41,6 +32,15 @@ namespace ReadMyHosts
         public static void Main(string[] args)
         {
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        }
+
+        protected Program()
+        {
+#if DEBUG
+            IsDebug = true;
+#else
+            IsDebug = false;
+#endif
         }
 
         private static bool IsDebug;
