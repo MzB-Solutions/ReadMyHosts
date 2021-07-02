@@ -44,7 +44,7 @@ namespace ReadMyHosts.Core
             SetHostsRootPath();
         }
 
-        public static bool IsDebug { get; set; }
+        public bool IsDebug { get; set; }
 
         public string CustomPath { get; set; }
 
