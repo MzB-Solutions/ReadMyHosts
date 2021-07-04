@@ -1,4 +1,4 @@
-using ReadMyHosts.Core;
+﻿using ReadMyHosts.Core;
 using Avalonia;
 using Avalonia.ReactiveUI;
 
@@ -40,7 +40,6 @@ namespace ReadMyHosts
         IsDebug = true;
 #endif
         }
-
         private static bool IsDebug { get; set; }
     }
 }
