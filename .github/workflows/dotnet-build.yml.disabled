@@ -59,12 +59,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
-      - name: Restore NuGet packages
-        run: dotnet restore -v n
       - name: Build .NET
-        run: dotnet build -v n --no-restore -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output
-      - name: Run tests
-        run: dotnet test --no-build -v n
+        run: dotnet build -v n -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
         with:

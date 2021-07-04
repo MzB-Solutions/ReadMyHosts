@@ -30,6 +30,21 @@ jobs:
         languages: ${{ matrix.language }}
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
+    - name: Run tests
+      run: dotnet test --no-build -v n
+    - name: Run Codacy Analysis CLI
+      uses: codacy/codacy-analysis-cli-action@1.1.0
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        verbose: true
+        output: results.sarif
+        format: sarif
+        gh-code-scanning-compat: true
+        max-allowed-issues: 2147483647
+    - name: Upload SARIF results file
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
   build:
@@ -62,6 +77,8 @@ jobs:
           dotnet-version: 5.0.x
       - name: build with restore
         run: dotnet build -v m -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
+      - name: Run tests
+        run: dotnet test --no-build -v n
       - name: Run Codacy Analysis
         if: ${{ matrix.platform == 'linux' }}
         uses: codacy/codacy-analysis-cli-action@master
