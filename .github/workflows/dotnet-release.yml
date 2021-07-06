@@ -97,6 +97,8 @@ jobs:
             platform: win32
           - os: ubuntu-latest
             platform: linux
+          - os: macos-latest
+            platform: macosx
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       appVersion: v0.1e.build${{ github.run_number }}
@@ -136,7 +138,7 @@ jobs:
       with:
         files: ${{ env.WORK_PATH }}/artifacts/RMH-${{ matrix.platform }}-${{ env.appVersion}}._${{ matrix.BuildConfig }}.zip
     - name: debugging information linux
-      if: ${{ matrix.platform == 'linux' }}
+      if: ${{ matrix.platform == 'linux' || matrix.platform == 'macosx' }}
       run: |
         printenv
       shell: bash
