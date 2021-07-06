@@ -1,0 +1,82 @@
+name: "Code and Dependency Analysis"
+
+on:
+  push:
+    branches: [ main, dev ]
+  schedule:
+    - cron: '44 5 * * 5'
+
+jobs:
+  codeql:
+    name: Analyze dependencies for vulnerabilities.
+    runs-on: ubuntu-latest
+    needs: build
+    continue-on-error: true
+    env:
+      CODEQL_LANGUAGE: csharp
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ env.CODEQL_LANGUAGE }}
+    - name: Cache Nuget
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.NUGET_PACKAGES }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+
+  codacy:
+    name: Analyze code vulnerabilities.
+    runs-on: ubuntu-latest
+    needs: build
+    continue-on-error: true
+    env:
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+      PostSharpLicense: ${{ secrets.PS_LICENSE }}
+      DOTNET_NOLOGO: true
+    steps:
+    - name: Checkout Project
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Cache Nuget
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.NUGET_PACKAGES }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    - name: build with restore
+      run: dotnet build -v m -c Release
+    - name: Run Codacy Analysis for Codacy WebUI
+      uses: codacy/codacy-analysis-cli-action@master
+    - name: Run Codacy Analysis for GH security audits
+      uses: codacy/codacy-analysis-cli-action@1.1.0
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        verbose: true
+        output: results.sarif
+        format: sarif
+        gh-code-scanning-compat: true
+        max-allowed-issues: 2147483647
+    - name: Upload SARIF results file
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif

@@ -1,0 +1,4 @@
+core:
+- any: [ 'ReadMyHosts.Core/**/*' ]
+ui:
+- any: [ 'ReadMyHosts/**/*' ]
