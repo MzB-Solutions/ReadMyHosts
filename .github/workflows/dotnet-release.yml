@@ -18,9 +18,10 @@ jobs:
       fail-fast: true
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
+        hwBits: [ x86,x64,arm64,arm ]
         include:
           - os: windows-latest
-            platform: win32
+            platform: win
           - os: ubuntu-latest
             platform: linux
           - os: macos-latest
@@ -32,6 +33,7 @@ jobs:
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
       WORK_PATH: ${{ github.workspace }}
       BuildConfig: Release
+      buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
     steps:
     - name: Apply PR labels as needed
       uses: actions/labeler@v2
@@ -52,15 +54,15 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-    - name: Prep for release
+    - name: Prep artifact name
       shell: bash
       run: |
         tag=$(git describe --tags --abbrev=0)
         echo "tag=$tag" >> $GITHUB_ENV
-        release_name="RMH-${{ env.tag }}-${{ matrix.platform }}"
+        release_name="RMH-${{ env.tag }}-${{ matrix.platform }}-${{ matrix.hwBits }}"
         echo "release_name=$release_name" >> GITHUB_ENV
     - name: build with restore
-      run: dotnet build -v m -c ${{ env.BuildConfig }} -o ${{ env.WORK_PATH }}/output/
+      run: dotnet build -v m -c ${{ env.BuildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
     - name: Print debug information
       run: |
         printenv
@@ -71,8 +73,8 @@ jobs:
         name: ${{ env.release_name }}
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
-    - name: Pack Artifacts
-      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip ${{ env.WORK_PATH }}/output/ -r
+##    - name: Pack Artifacts
+##      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip ${{ env.WORK_PATH }}/output/ -r
     - name: Release
       uses: softprops/action-gh-release@v1
       with:

@@ -18,21 +18,23 @@ jobs:
       fail-fast: true
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
+        hwBits: [ x86,x64,arm64,arm ]
         include:
           - os: windows-latest
-            platform: win32
+            platform: windows
           - os: ubuntu-latest
             platform: linux
           - os: macos-latest
             platform: macosx
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       appVersion: v0.1e.b${{ github.run_number }}
-      PostSharpLicense: ${{ secrets.PS_LICENSE }}
+      BuildConfig: Debug
+      buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
       DOTNET_NOLOGO: true
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PostSharpLicense: ${{ secrets.PS_LICENSE }}
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
       WORK_PATH: ${{ github.workspace }}
-      BuildConfig: Debug
     steps:
     - name: Checkout Project
       uses: actions/checkout@v2
@@ -49,13 +51,13 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-    - name: Prep release name
+    - name: Prep artifact name
       shell: bash
       run: |
-        release_name="RMH-${{ env.appVersion }}-${{ matrix.platform }}"
+        release_name="RMH-${{ env.appVersion }}-${{ matrix.platform }}-${{ matrix.hwBits }}"
         echo "release_name=$release_name" >> GITHUB_ENV
     - name: Build with restore
-      run: dotnet build -v m -c ${{ env.BuildConfig }} -o ${{ env.WORK_PATH }}/output/
+      run: dotnet build -v m -c ${{ env.BuildConfig }} - -o ${{ env.WORK_PATH }}/output/
     - name: print debug information
       run: |
         printenv
@@ -66,6 +68,6 @@ jobs:
         name: ${{ env.release_name }}
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
-    - name: Pack Artifacts
-      shell: bash
-      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip ${{ env.WORK_PATH }}/output/ -r
+##    - name: Pack Artifacts
+##      shell: bash
+##      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip ${{ env.WORK_PATH }}/output/ -r

@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <StartupObject>ReadMyHosts.Program</StartupObject>
+    <Platforms>AnyCPU;ARM64;ARM32;x64;x86</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
