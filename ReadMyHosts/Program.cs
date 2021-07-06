@@ -36,10 +36,12 @@ namespace ReadMyHosts
 
         protected Program()
         {
+            IsDebug = false;
 #if DEBUG
         IsDebug = true;
 #endif
         }
+
         private static bool IsDebug { get; set; }
     }
 }
