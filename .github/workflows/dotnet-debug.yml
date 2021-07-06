@@ -27,7 +27,7 @@ jobs:
             platform: macosx
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      appVersion: v0.1e.build${{ github.run_number }}
+      appVersion: v0.1e.b${{ github.run_number }}
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
@@ -52,9 +52,7 @@ jobs:
     - name: Prep release name
       shell: bash
       run: |
-        tag=${{ env.appVersion }}
-        echo "tag=$tag" >> $GITHUB_ENV
-        release_name="RMH-$tag-${{ matrix.platform }}-$BuildConfig"
+        release_name="RMH-${{ env.appVersion }}-${{ matrix.platform }}"
         echo "release_name=$release_name" >> GITHUB_ENV
     - name: Build with restore
       run: dotnet build -v m -c ${{ env.BuildConfig }} -o ${{ env.WORK_PATH }}/output/
