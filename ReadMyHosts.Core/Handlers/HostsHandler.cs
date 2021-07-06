@@ -11,20 +11,31 @@ using static PostSharp.Patterns.Diagnostics.FormattedMessageBuilder;
 
 namespace ReadMyHosts.Core.Handlers
 {
-    public class HostsHandler
+
+    public sealed class HostsHandler
     {
         /// <summary>
         /// HostsHandler Constructor
         /// </summary>
+        /// TODO (smzb) need to implement custom path logic
         public HostsHandler()
         {
             SysInfo = new Info();
+            ReadFile(SysInfo.RootPath);
         }
 
+        // What follows here is an implementation of a Singleton Pattern ###
+        // Ensuring, that there truely can only be one!
+        private static readonly Lazy<HostsHandler> lazy = new Lazy<HostsHandler>
+            (() => new HostsHandler());
+
+        public static HostsHandler Instance {get { return lazy.Value;} }
+        // This is the end of the Singleton pattern ###
         public List<Host> HostList { get => hostList; set => hostList = value; }
 
         // TODO(mitoskalandiel): ReadFile should NOT be passed parameters: see #12
-        public void ReadFile(string rootPath, string path = "etc", string file = "hosts")
+        // should be fixed, since the only calling it now, is our constructor
+        private void ReadFile(string rootPath, string path = "etc", string file = "hosts")
         {
             string fullName = rootPath + path + SysInfo.DirectorySeparator + file;
             string line;
