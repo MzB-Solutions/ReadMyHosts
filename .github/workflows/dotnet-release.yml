@@ -62,7 +62,10 @@ jobs:
         release_name="RMH-${{ env.tag }}-${{ matrix.platform }}-${{ matrix.hwBits }}"
         echo "release_name=$release_name" >> GITHUB_ENV
     - name: build with restore
-      run: dotnet build -v m -c ${{ env.BuildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
+      run: |
+        pushd ReadMyHosts/
+        dotnet build -v m -c ${{ env.BuildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
+        popd
     - name: Print debug information
       run: |
         printenv
