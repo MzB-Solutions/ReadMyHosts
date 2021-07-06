@@ -14,21 +14,19 @@ jobs:
     name: Analyze dependencies for vulnerabilities.
     runs-on: ubuntu-latest
     continue-on-error: true
+    env:
+      CODEQL_LANGUAGE: csharp
     permissions:
       actions: read
       contents: read
       security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'csharp' ]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
-        languages: ${{ matrix.language }}
+        languages: ${{ env.CODEQL_LANGUAGE }}
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
     - name: Perform CodeQL Analysis
