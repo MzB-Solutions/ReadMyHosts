@@ -37,8 +37,6 @@ jobs:
     name: Analyze code vulnerabilities.
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      appVersion: v0.1d_${{ matrix.platform }}
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
     steps:
@@ -83,7 +81,7 @@ jobs:
             platform: linux
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      appVersion: v0.1d_${{ matrix.platform }}
+      appVersion: v0.1e(${{ env.GITHUB_RUN_NUMBER }})
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
     steps:
@@ -96,17 +94,17 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: build with restore
-        run: dotnet build -v m -c ${{ matrix.BuildConfig }} -o ${{ github.workspace }}/output/
+        run: dotnet build -v m -c ${{ matrix.BuildConfig }} -o ~/output/
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: RMH-${{ matrix.platform }}-${{ env.appVersion}}.${{ env.GITHUB_RUN_NUMBER }}
-          path: ${{ github.workspace }}/output/ # or path/to/artifact
+          name: RMH-${{ matrix.platform }}-${{ env.appVersion}}_${{ matrix.BuildConfig }}
+          path: ~/output/ # or path/to/artifact
           if-no-files-found: error
       - name: Pack Artifacts
-        run: 7z a -tzip ${{ github.workspace }}/RMH-${{ matrix.platform }}-${{ env.appVersion }}.zip ${{ github.workspace }}/output/ -r
+        run: 7z a -tzip ~/RMH-${{ matrix.platform }}-${{ env.appVersion}}_${{ matrix.BuildConfig }}.zip ~/output/ -r
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ github.workspace }}/RMH-${{ matrix.platform }}-${{ env.appVersion }}.zip
+          files: ~/RMH-${{ matrix.platform }}-${{ env.appVersion}}._${{ matrix.BuildConfig }}.zip
