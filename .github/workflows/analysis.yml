@@ -1,8 +1,9 @@
-name: "Code and Dependency Analysis"
+name: Code and Dependency Analysis
 
 on:
   push:
-    branches: [ dev ]
+    branches: 
+      - dev
 ##  schedule:
 ##    - cron: '44 5 * * 5'
 
