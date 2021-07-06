@@ -67,7 +67,7 @@ jobs:
     - name: Prep artifact name
       shell: bash
       run: |
-        release_name=RMH-${{ env.appVersion }}-${{ env.buildTarget }}
+        release_name="RMH-$appVersion-$buildTarget"
         echo "release_name=$release_name" >> GITHUB_ENV
     - name: Build with restore
       run: |

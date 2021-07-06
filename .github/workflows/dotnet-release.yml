@@ -59,21 +59,21 @@ jobs:
       run: |
         tag=$(git describe --tags --abbrev=0)
         echo "tag=$tag" >> $GITHUB_ENV
-        release_name=RMH-${{ env.tag }}-${{ env.buildTarget }}
+        release_name="RMH-$tag-$buildTarget"
         echo "release_name=$release_name" >> GITHUB_ENV
-    - name: Persist artifact name
-      id: set_persistent_value
-      uses: aaimio/set-persistent-value@v1
-      with:
-        key: release_name
-        value: "RMH-${{ env.tag }}-${{ env.buildTarget }}"
-        access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
-    - name: Retrieve artifact name
-      id: get_persistent_value
-      uses: aaimio/get-persistent-value@v1
-      with:
-        key: release_name
-        access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
+##    - name: Persist artifact name
+##      id: set_persistent_value
+##      uses: aaimio/set-persistent-value@v1
+##      with:
+##        key: release_name
+##        value: "RMH-${{ env.tag }}-${{ env.buildTarget }}"
+##        access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
+##    - name: Retrieve artifact name
+##      id: get_persistent_value
+##      uses: aaimio/get-persistent-value@v1
+##      with:
+##        key: release_name
+##        access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
     - name: build with restore
       run: |
         pushd ReadMyHosts/
@@ -86,12 +86,12 @@ jobs:
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ steps.get_persistent_value.outputs.value }}
+        name: ${{ env.release_name }}
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
 ##    - name: Pack Artifacts
-##      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/${{ steps.get_persistent_value.outputs.value }}.zip ${{ env.WORK_PATH }}/output/ -r
+##      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip ${{ env.WORK_PATH }}/output/ -r
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{ env.WORK_PATH }}/artifacts/${{ steps.get_persistent_value.outputs.value }}.zip
+        files: ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip
