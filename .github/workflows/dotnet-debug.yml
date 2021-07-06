@@ -51,10 +51,23 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.hwBits }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-${{ matrix.hwBits }}-nuget-
+    ##- name: Persist artifact name
+    ##  id: set_persistent_value
+    ##  uses: aaimio/set-persistent-value@v1
+    ##  with:
+    ##    key: release_name
+    ##    value: RMH-${{ env.appVersion }}-${{ env.buildTarget }}
+    ##    access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
+    ##- name: Retrieve artifact name
+    ##  id: get_persistent_value
+    ##  uses: aaimio/get-persistent-value@v1
+    ##  with:
+    ##    key: release_name
+    ##    access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
     - name: Prep artifact name
       shell: bash
       run: |
-        release_name="RMH-${{ env.appVersion }}-${{ env.buildTarget }}"
+        release_name=RMH-${{ env.appVersion }}-${{ env.buildTarget }}
         echo "release_name=$release_name" >> GITHUB_ENV
     - name: Build with restore
       run: |
