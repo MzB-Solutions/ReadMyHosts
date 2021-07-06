@@ -27,7 +27,6 @@ jobs:
             platform: macosx
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      appVersion: v0.1e.build${{ github.run_number }}
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
@@ -60,6 +59,10 @@ jobs:
         release_name="RMH-$tag-${{ matrix.platform }}-$BuildConfig"
     - name: build with restore
       run: dotnet build -v m -c ${{ env.BuildConfig }} -o ${{ env.WORK_PATH }}/output/
+    - name: Print debug information
+      run: |
+        printenv
+      shell: bash
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -72,13 +75,3 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip
-    - name: debugging information linux/macos
-      if: ${{ matrix.platform == 'linux' || matrix.platform == 'macosx' }}
-      run: |
-        printenv
-      shell: bash
-    - name: debugging information windows
-      if: ${{ matrix.platform == 'win32' }}
-      run: |
-        Get-ChildItem Env: | Sort Name
-      shell: pwsh
