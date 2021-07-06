@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build Application & Artifacts
+    name: Build
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -48,9 +48,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.NUGET_PACKAGES }}
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        key: ${{ runner.os }}-${{ matrix.hwBits }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-nuget-
+          ${{ runner.os }}-${{ matrix.hwBits }}-nuget-
     - name: Prep artifact name
       shell: bash
       run: |

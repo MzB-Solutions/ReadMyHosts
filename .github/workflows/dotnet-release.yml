@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build Application (debug) & Artifacts
+    name: Build (debug)
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -35,7 +35,7 @@ jobs:
       BuildConfig: Release
       buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
     steps:
-    - name: Apply PR labels as needed
+    - name: Apply PR labels
       uses: actions/labeler@v2
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
@@ -51,9 +51,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.NUGET_PACKAGES }}
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        key: ${{ runner.os }}-${{ matrix.hwBits }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-nuget-
+          ${{ runner.os }}-${{ matrix.hwBits }}-nuget-
     - name: Prep artifact name
       shell: bash
       run: |
