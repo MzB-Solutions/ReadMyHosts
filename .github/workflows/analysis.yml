@@ -2,7 +2,7 @@ name: "Code and Dependency Analysis"
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ dev ]
 ##  schedule:
 ##    - cron: '44 5 * * 5'
 
