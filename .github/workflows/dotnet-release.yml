@@ -18,14 +18,14 @@ jobs:
       fail-fast: true
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        hwBits: [ x86,x64,arm64,arm ]
+        hwBits: [ x64,arm64 ]
         include:
           - os: windows-latest
             platform: win
           - os: ubuntu-latest
             platform: linux
           - os: macos-latest
-            platform: macosx
+            platform: osx
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
@@ -59,7 +59,7 @@ jobs:
       run: |
         tag=$(git describe --tags --abbrev=0)
         echo "tag=$tag" >> $GITHUB_ENV
-        release_name="RMH-${{ env.tag }}-${{ matrix.platform }}-${{ matrix.hwBits }}"
+        release_name="RMH-${{ env.tag }}-${{ env.buildTarget }}"
         echo "release_name=$release_name" >> GITHUB_ENV
     - name: build with restore
       run: |
