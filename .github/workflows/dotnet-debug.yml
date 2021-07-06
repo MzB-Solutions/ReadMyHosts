@@ -33,7 +33,6 @@ jobs:
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
       WORK_PATH: ${{ github.workspace }}
       BuildConfig: Debug
-      release_name: EmptyString
     steps:
     - name: Checkout Project
       uses: actions/checkout@v2
