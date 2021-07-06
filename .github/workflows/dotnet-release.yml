@@ -1,4 +1,4 @@
-name: compile release build
+name: Compile release build
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build code and release
+    name: Build code in debug-mode and create artifacts
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true

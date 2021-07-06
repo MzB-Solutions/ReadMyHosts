@@ -2,9 +2,15 @@
 
 ## Build Status
 
-- [![.NET Release](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml/badge.svg)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml)
+- Main Branch: [![Code and Dependency Analysis (main)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/analysis.yml/badge.svg?branch=main)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/analysis.yml)
+- 
+- Dev Branch: [![Code and Dependency Analysis (dev)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/analysis.yml/badge.svg?branch=dev)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/analysis.yml)
 
-- [![Codacy Badge](https://app.codacy.com/project/badge/Grade/03080d3aed254c54b49ed7e18b59f996)](https://www.codacy.com/gh/MzB-Solutions/ReadMyHosts/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MzB-Solutions/ReadMyHosts&amp;utm_campaign=Badge_Grade)
+- Main Branch: [![Compile debug build](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-debug.yml/badge.svg?branch=dev)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-debug.yml)
+
+- Dev Branch: [![Compile release build](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml/badge.svg?branch=main)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml)
+
+- Main Branch: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/03080d3aed254c54b49ed7e18b59f996)](https://www.codacy.com/gh/MzB-Solutions/ReadMyHosts/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MzB-Solutions/ReadMyHosts&amp;utm_campaign=Badge_Grade)
 ## ReadMyHosts
 
 ReadMyHosts (**RMH**) is a software to handle the windows/linux hosts file
