@@ -94,7 +94,7 @@ jobs:
           printenv
         shell: bash
       - name: debugging information windows
-        if: ${{ matrix.platform == 'linux' }}
+        if: ${{ matrix.platform == 'windows' }}
         run: >-
           Get-ChildItem Env: | Sort Name
         shell: pwsh
