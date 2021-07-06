@@ -66,12 +66,15 @@ jobs:
     ##  with:
     ##    key: release_name
     ##    access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
+    - name: Prep tag
+      shell: bash
+      run: |
+        myTag="${appVersion}_tagged"
+        echo "myTag=$myTag" >> $GITHUB_ENV
     - name: Prep artifact name
       shell: bash
       run: |
-        tag="${appVersion}"
-        echo "tag=$tag" >> $GITHUB_ENV
-        release="RMH-${appVersion}-${buildTarget}"
+        release="RMH-${tag}-${buildTarget}"
         echo "release=$release" >> GITHUB_ENV
     - name: Build with restore
       run: |
