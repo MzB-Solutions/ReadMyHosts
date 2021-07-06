@@ -1,4 +1,8 @@
 core:
-- any: [ 'ReadMyHosts.Core/**/*' ]
+- ReadMyHosts.Core/**/*
 ui:
-- any: [ 'ReadMyHosts/**/*' ]
+- ReadMyHosts/**/*
+github-stuff:
+- .github/**/*
+repo:
+- '*'
