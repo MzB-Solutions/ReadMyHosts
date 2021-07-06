@@ -21,7 +21,7 @@ jobs:
         hwBits: [ x64,arm64 ]
         include:
           - os: windows-latest
-            platform: windows
+            platform: win
           - os: ubuntu-latest
             platform: linux
           - os: macos-latest
