@@ -54,13 +54,17 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.hwBits }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-${{ matrix.hwBits }}-nuget-
-    - name: Prep artifact name
+    - name: Prep tag
       shell: bash
       run: |
         tag=$(git describe --tags --abbrev=0)
         echo "tag=$tag" >> $GITHUB_ENV
+    - name: Prep artifact name
+      shell: bash
+      run: |
         release="RMH-${tag}-${buildTarget}"
         echo "release=$release" >> GITHUB_ENV
+
 ##    - name: Persist artifact name
 ##      id: set_persistent_value
 ##      uses: aaimio/set-persistent-value@v1

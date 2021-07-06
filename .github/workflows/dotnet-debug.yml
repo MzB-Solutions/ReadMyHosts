@@ -88,7 +88,7 @@ jobs:
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.release_name }}
+        name: ${{ env.release }}
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
 ##    - name: Pack Artifacts
