@@ -49,21 +49,26 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
+    - name: Prep for release
+      shell: bash
+      run: |
+        tag=${{ env.appVersion }}
+        release_name="RMH-$tag-${{ matrix.platform }}-$BuildConfig"
     - name: build with restore
       run: dotnet build -v m -c ${{ env.BuildConfig }} -o ${{ env.WORK_PATH }}/output/
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: RMH-${{ matrix.platform }}-${{ env.appVersion}}_${{ env.BuildConfig }}
+        name: ${{ env.release_name }}
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
     - name: Pack Artifacts
-      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/RMH-${{ matrix.platform }}-${{ env.appVersion}}_${{ env.BuildConfig }}.zip ${{ env.WORK_PATH }}/output/ -r
+      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip ${{ env.WORK_PATH }}/output/ -r
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: ${{ env.WORK_PATH }}/artifacts/RMH-${{ matrix.platform }}-${{ env.appVersion}}._${{ env.BuildConfig }}.zip
+        files: ${{ env.WORK_PATH }}/artifacts/${{ env.release_name }}.zip
     - name: debugging information linux/macos
       if: ${{ matrix.platform == 'linux' || matrix.platform == 'macosx' }}
       run: |

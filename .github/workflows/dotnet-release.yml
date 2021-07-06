@@ -63,7 +63,7 @@ jobs:
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: RMH-${{ matrix.platform }}-${{ env.appVersion}}_${{ env.BuildConfig }}
+        name: ${{ env.release_name }}
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
     - name: Pack Artifacts
