@@ -137,7 +137,7 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: ${{ env.WORK_PATH }}/artifacts/RMH-${{ matrix.platform }}-${{ env.appVersion}}._${{ matrix.BuildConfig }}.zip
-    - name: debugging information linux
+    - name: debugging information linux/macos
       if: ${{ matrix.platform == 'linux' || matrix.platform == 'macosx' }}
       run: |
         printenv
