@@ -69,9 +69,9 @@ jobs:
     - name: Prep artifact name
       shell: bash
       run: |
-        tag="$appVersion_tagged"
+        tag="${appVersion}"
         echo "tag=$tag" >> $GITHUB_ENV
-        release="RMH-$appVersion-$buildTarget"
+        release="RMH-${appVersion}-${buildTarget}"
         echo "release=$release" >> GITHUB_ENV
     - name: Build with restore
       run: |
