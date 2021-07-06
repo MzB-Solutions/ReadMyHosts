@@ -81,7 +81,7 @@ jobs:
             platform: linux
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      appVersion: v0.1e(${{ env.GITHUB_RUN_NUMBER }})
+      appVersion: v0.1e(${{ GITHUB_RUN_NUMBER }})
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
     steps:
