@@ -17,15 +17,17 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest, windows-latest ]
         hwBits: [ x64,arm64 ]
         include:
           - os: windows-latest
             platform: win
           - os: ubuntu-latest
             platform: linux
-          - os: macos-latest
-            platform: osx
+## I've got nothing to prep my solution for any Mac environment
+## That's why this is disabled.
+##          - os: macos-latest
+##            platform: osx
     env:
       appVersion: v0.1e.b${{ github.run_number }}
       BuildConfig: Debug
