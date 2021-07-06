@@ -13,6 +13,7 @@ jobs:
   codeql:
     name: Analyze dependencies for vulnerabilities.
     runs-on: ubuntu-latest
+    needs: build
     continue-on-error: true
     env:
       CODEQL_LANGUAGE: csharp
@@ -35,6 +36,7 @@ jobs:
   codacy:
     name: Analyze code vulnerabilities.
     runs-on: ubuntu-latest
+    needs: build
     continue-on-error: true
     env:
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
@@ -116,6 +118,6 @@ jobs:
         shell: bash
       - name: debugging information windows
         if: ${{ matrix.platform == 'win32' }}
-        run: >-
+        run: |
           Get-ChildItem Env: | Sort Name
         shell: pwsh
