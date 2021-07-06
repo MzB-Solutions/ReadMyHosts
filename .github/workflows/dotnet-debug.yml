@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build .Net application and create Artifacts
+    name: Build Application & Artifacts
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true

@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build code in debug-mode and create artifacts
+    name: Build Application (debug) & Artifacts
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
