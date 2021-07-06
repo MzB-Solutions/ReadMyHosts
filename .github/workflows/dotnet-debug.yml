@@ -30,7 +30,7 @@ jobs:
 ##            platform: osx
     env:
       appVersion: v0.1e.b${{ github.run_number }}
-      BuildConfig: Debug
+      buildConfig: Debug
       buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
       DOTNET_NOLOGO: true
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,14 +69,14 @@ jobs:
     - name: Prep artifact name
       shell: bash
       run: |
-        tag="$appVersion"
+        tag="$appVersion_tagged"
         echo "tag=$tag" >> $GITHUB_ENV
-        release_name="RMH-$appVersion-$buildTarget"
-        echo "release_name=$release_name" >> GITHUB_ENV
+        release="RMH-$appVersion-$buildTarget"
+        echo "release=$release" >> GITHUB_ENV
     - name: Build with restore
       run: |
         pushd ReadMyHosts/
-        dotnet build -v m -c ${{ env.BuildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
+        dotnet build -v m -c ${{ env.buildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
         popd
     - name: print debug information
       run: |
