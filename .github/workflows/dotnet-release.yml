@@ -88,16 +88,6 @@ jobs:
       DOTNET_NOLOGO: true
       WORK_PATH: ${{ github.workspace }}
     steps:
-      - name: debugging information linux
-        if: ${{ matrix.platform == 'linux' }}
-        run: |
-          printenv
-        shell: bash
-      - name: debugging information windows
-        if: ${{ matrix.platform == 'win32' }}
-        run: >-
-          Get-ChildItem Env: | Sort Name
-        shell: pwsh
       - name: Checkout Project
         uses: actions/checkout@v2
         with:
@@ -121,3 +111,13 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: ${{ env.WORK_PATH }}/artifacts/RMH-${{ matrix.platform }}-${{ env.appVersion}}._${{ matrix.BuildConfig }}.zip
+      - name: debugging information linux
+        if: ${{ matrix.platform == 'linux' }}
+        run: |
+          printenv
+        shell: bash
+      - name: debugging information windows
+        if: ${{ matrix.platform == 'win32' }}
+        run: >-
+          Get-ChildItem Env: | Sort Name
+        shell: pwsh
