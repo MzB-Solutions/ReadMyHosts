@@ -85,6 +85,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       appVersion: v0.1e.build${{ github.run_number }}
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
+      WORK_PATH: /home/runner/work
       DOTNET_NOLOGO: true
     steps:
       - name: debugging information linux
@@ -106,17 +107,17 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: build with restore
-        run: dotnet build -v m -c ${{ matrix.BuildConfig }} -o ~/output/
+        run: dotnet build -v m -c ${{ matrix.BuildConfig }} -o ${{ env.WORK_PATH }}/output/
       - name: Create Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: RMH-${{ matrix.platform }}-${{ env.appVersion}}_${{ matrix.BuildConfig }}
-          path: ~/output/ # or path/to/artifact
+          path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
           if-no-files-found: error
       - name: Pack Artifacts
-        run: 7z a -tzip ~/RMH-${{ matrix.platform }}-${{ env.appVersion}}_${{ matrix.BuildConfig }}.zip ~/output/ -r
+        run: 7z a -tzip ${{ env.WORK_PATH }}/RMH-${{ matrix.platform }}-${{ env.appVersion}}_${{ matrix.BuildConfig }}.zip ${{ env.WORK_PATH }}/output/ -r
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ~/RMH-${{ matrix.platform }}-${{ env.appVersion}}._${{ matrix.BuildConfig }}.zip
+          files: ${{ env.WORK_PATH }}/RMH-${{ matrix.platform }}-${{ env.appVersion}}._${{ matrix.BuildConfig }}.zip
