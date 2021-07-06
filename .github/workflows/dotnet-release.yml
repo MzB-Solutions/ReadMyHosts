@@ -86,7 +86,7 @@ jobs:
       appVersion: v0.1e.build${{ github.run_number }}
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
-      WORK_PATH: /home/runner/work
+      WORK_PATH: ${{ github.workspace }}
     steps:
       - name: debugging information linux
         if: ${{ matrix.platform == 'linux' }}
