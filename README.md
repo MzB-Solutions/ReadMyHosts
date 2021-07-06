@@ -1,6 +1,7 @@
 
 # Build Status
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/748e26ae542049cdb6648672c4388fdd)](https://app.codacy.com/gh/MzB-Solutions/ReadMyHosts?utm_source=github.com&utm_medium=referral&utm_content=MzB-Solutions/ReadMyHosts&utm_campaign=Badge_Grade_Settings)
 - [![.NET Build](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-build.yml/badge.svg)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-build.yml)
 
 - [![.NET Release](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml/badge.svg)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml)
