@@ -1,6 +1,6 @@
-## Build Status
+# ReadMyHosts
 
-  - [![.NET Build](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-build.yml/badge.svg)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-build.yml)
+## Build Status
 
   - [![.NET Release](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml/badge.svg)](https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml)
 
@@ -17,6 +17,10 @@ but does this as Verbose as needed.
   - (Note the Appyyyymmdd.log filename (no "Debug"))
 
   - based on this github workflow: [https://github.com/MzB-Solutions/ReadMyHosts/actions/workflows/dotnet-release.yml]
+
+~~Download this [file](https://github.com/MzB-Solutions/ReadMyHosts/releases/download/v0.1/RMH-linux-v0.1.zip) for Linux~~
+
+~~Download this [file](https://github.com/MzB-Solutions/ReadMyHosts/releases/download/v0.1/RMH-win32-v0.1.zip) for Windows~~
 
 ### Intent and purpose
 
