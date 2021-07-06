@@ -13,6 +13,7 @@ jobs:
   codeql:
     name: Analyze dependencies for vulnerabilities.
     runs-on: ubuntu-latest
+    continue-on-error: true
     permissions:
       actions: read
       contents: read
@@ -36,6 +37,7 @@ jobs:
   codacy:
     name: Analyze code vulnerabilities.
     runs-on: ubuntu-latest
+    continue-on-error: true
     env:
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
@@ -85,6 +87,16 @@ jobs:
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
     steps:
+      - name: debugging information linux
+        if: ${{ matrix.platform == 'linux' }}
+        run: |
+          printenv
+        shell: bash
+      - name: debugging information windows
+        if: ${{ matrix.platform == 'linux' }}
+        run: >-
+          Get-ChildItem Env: | Sort Name
+        shell: pwsh
       - name: Checkout Project
         uses: actions/checkout@v2
         with:
