@@ -16,6 +16,8 @@ jobs:
     env:
       CODEQL_LANGUAGE: csharp
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+      PostSharpLicense: ${{ secrets.PS_LICENSE }}
+      DOTNET_NOLOGO: true
     permissions:
       actions: read
       contents: read
@@ -31,11 +33,13 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.NUGET_PACKAGES }}
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        key: ${{ runner.os }}-x64-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-nuget-
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+          ${{ runner.os }}-x64-nuget-
+    - name: Build app
+      run: dotnet build -v m -c Release
+##    - name: Autobuild
+##      uses: github/codeql-action/autobuild@v1
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
 
@@ -60,9 +64,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.NUGET_PACKAGES }}
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        key: ${{ runner.os }}-x64-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-nuget-
+          ${{ runner.os }}-x64-nuget-
     - name: build with restore
       run: dotnet build -v m -c Release
     - name: Run Codacy Analysis for Codacy WebUI

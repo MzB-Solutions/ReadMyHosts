@@ -76,7 +76,7 @@ jobs:
     - name: Build with restore
       run: |
         pushd ReadMyHosts/
-        dotnet build -v m -c ${{ env.buildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
+        dotnet build -v n -c ${{ env.buildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
         popd
     - name: print debug information
       run: |
