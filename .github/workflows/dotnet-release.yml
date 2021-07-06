@@ -56,7 +56,10 @@ jobs:
       shell: bash
       run: |
         tag=$(git describe --tags --abbrev=0)
+        echo "tag=$tag" >> $GITHUB_ENV
         release_name="RMH-$tag-${{ matrix.platform }}-$BuildConfig"
+        echo "release_name=$release_name" >> GITHUB_ENV
+
     - name: build with restore
       run: dotnet build -v m -c ${{ env.BuildConfig }} -o ${{ env.WORK_PATH }}/output/
     - name: Print debug information
