@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build (Debug)
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true

@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build (debug)
+    name: Build (Release)
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -27,6 +27,7 @@ jobs:
           - os: macos-latest
             platform: osx
     env:
+      appVersion: v0.1.7.${{ github.run_number }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPOSITORY: MzB-Solutions/ReadMyHosts
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
@@ -58,7 +59,8 @@ jobs:
     - name: Prep tag and naming
       shell: bash
       run: |
-        myTag=$(git describe --tags --abbrev=0)
+        ##myTag=$(git describe --tags --abbrev=0)
+        myTag="${appVersion}"
         release="RMH-${myTag}-${buildTarget}"
         echo "myTag=${myTag}" >> $GITHUB_ENV
         echo "release=${release}" >> $GITHUB_ENV
