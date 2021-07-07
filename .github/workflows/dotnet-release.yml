@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - "main"
-    tags:
-      - 'v*'
-  release:
-    types: # This configuration does not affect the page_build event above
-      - published
+#    tags:
+#      - 'v*'
+##  release:
+##    types: # This configuration does not affect the page_build event above
+##      - published
 
 jobs:
   build:
@@ -28,6 +28,7 @@ jobs:
             platform: osx
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPOSITORY: MzB-Solutions/ReadMyHosts
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
@@ -42,7 +43,7 @@ jobs:
     - name: Checkout Project
       uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        fetch-depth: 1
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -70,6 +71,14 @@ jobs:
       run: |
         printenv
       shell: bash
+    - name: Generate Changelog
+      shell: bash
+      run: echo "# Good things have arrived" > ${{ github.workflow }}-CHANGELOG.txt
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v5.5
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -80,4 +89,6 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
+        body_path: ${{ github.workflow }}-CHANGELOG.txt
+        tag_name: ${{ steps.tag_version.outputs.new_tag }}
         files: ${{ env.WORK_PATH }}/artifacts/${{ env.release }}.zip

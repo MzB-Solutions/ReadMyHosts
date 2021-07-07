@@ -34,6 +34,7 @@ jobs:
       buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
       DOTNET_NOLOGO: true
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPOSITORY: MzB-Solutions/ReadMyHosts
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
       WORK_PATH: ${{ github.workspace }}
@@ -41,7 +42,7 @@ jobs:
     - name: Checkout Project
       uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        fetch-depth: 1
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:

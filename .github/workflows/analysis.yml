@@ -5,8 +5,6 @@ on:
     branches: 
       - dev
       - main
-##  schedule:
-##    - cron: '44 5 * * 5'
 
 jobs:
   codeql:
@@ -25,6 +23,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
@@ -38,8 +38,6 @@ jobs:
           ${{ runner.os }}-x64-nuget-
     - name: Build app
       run: dotnet build -v m -c Release
-##    - name: Autobuild
-##      uses: github/codeql-action/autobuild@v1
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
 
