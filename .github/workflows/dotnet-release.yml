@@ -54,16 +54,13 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.hwBits }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-${{ matrix.hwBits }}-nuget-
-    - name: Prep tag
+    - name: Prep tag and naming
       shell: bash
       run: |
         myTag=$(git describe --tags --abbrev=0)
-        echo "myTag=${myTag}" >> $GITHUB_ENV
-    - name: Prep naming
-      shell: bash
-      run: |
         release="RMH-${myTag}-${buildTarget}"
-        echo "release=${release}" >> GITHUB_ENV
+        echo "myTag=${myTag}" >> $GITHUB_ENV
+        echo "release=${release}" >> $GITHUB_ENV
     - name: build with restore
       run: |
         pushd ReadMyHosts/
@@ -80,8 +77,6 @@ jobs:
         retention-days: 14
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
-##    - name: Pack Artifacts
-##      run: 7z a -tzip ${{ env.WORK_PATH }}/artifacts/${{ env.release }}.zip ${{ env.WORK_PATH }}/output/ -r
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
