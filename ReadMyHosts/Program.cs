@@ -1,4 +1,4 @@
-using ReadMyHosts.Core;
+﻿using ReadMyHosts.Core;
 using Avalonia;
 using Avalonia.ReactiveUI;
 
@@ -36,6 +36,7 @@ namespace ReadMyHosts
 
         protected Program()
         {
+            IsDebug = false;
 #if DEBUG
         IsDebug = true;
 #endif

@@ -10,9 +10,7 @@ namespace ReadMyHosts.Services
 
         public IEnumerable<Host> GetData()
         {
-            var handler = new HostsHandler();
-            handler.ReadFile(Program.SysInfo.RootPath);
-            return handler.HostList;
+            return new HostsHandler().HostList;
         }
 
         #endregion Public Methods

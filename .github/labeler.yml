@@ -1,0 +1,8 @@
+core:
+- ReadMyHosts.Core/**/*
+ui:
+- ReadMyHosts/**/*
+github-stuff:
+- .github/**/*
+repo:
+- '*'
