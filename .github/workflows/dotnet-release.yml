@@ -24,8 +24,6 @@ jobs:
             platform: win
           - os: ubuntu-latest
             platform: linux
-          - os: macos-latest
-            platform: osx
     env:
       appVersion: v0.1.6
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
