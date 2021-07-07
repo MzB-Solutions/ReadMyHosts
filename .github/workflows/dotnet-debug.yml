@@ -70,12 +70,12 @@ jobs:
       shell: bash
       run: |
         myTag="${appVersion}_tagged"
-        echo "myTag=$myTag" >> $GITHUB_ENV
+        echo "myTag=${myTag}" >> $GITHUB_ENV
     - name: Prep artifact name
       shell: bash
       run: |
-        release="RMH-${myTag}-${buildTarget}"
-        echo "release=$release" >> GITHUB_ENV
+        myRelease="RMH-${myTag}-${buildTarget}"
+        echo "myRelease=${myRelease}" >> GITHUB_ENV
     - name: Build with restore
       run: |
         pushd ReadMyHosts/
@@ -88,7 +88,7 @@ jobs:
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.release }}
+        name: ${{ env.myRelease }}
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
 ##    - name: Pack Artifacts

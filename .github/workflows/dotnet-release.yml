@@ -58,12 +58,12 @@ jobs:
       shell: bash
       run: |
         myTag=$(git describe --tags --abbrev=0)
-        echo "myTag=$myTag" >> $GITHUB_ENV
+        echo "myTag=${myTag}" >> $GITHUB_ENV
     - name: Prep artifact name
       shell: bash
       run: |
         release="RMH-${myTag}-${buildTarget}"
-        echo "release=$release" >> GITHUB_ENV
+        echo "release=${release}" >> GITHUB_ENV
 
 ##    - name: Persist artifact name
 ##      id: set_persistent_value
