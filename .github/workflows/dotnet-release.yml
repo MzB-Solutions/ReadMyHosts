@@ -59,25 +59,11 @@ jobs:
       run: |
         myTag=$(git describe --tags --abbrev=0)
         echo "myTag=${myTag}" >> $GITHUB_ENV
-    - name: Prep artifact name
+    - name: Prep naming
       shell: bash
       run: |
         release="RMH-${myTag}-${buildTarget}"
         echo "release=${release}" >> GITHUB_ENV
-
-##    - name: Persist artifact name
-##      id: set_persistent_value
-##      uses: aaimio/set-persistent-value@v1
-##      with:
-##        key: release_name
-##        value: "RMH-${{ env.tag }}-${{ env.buildTarget }}"
-##        access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
-##    - name: Retrieve artifact name
-##      id: get_persistent_value
-##      uses: aaimio/get-persistent-value@v1
-##      with:
-##        key: release_name
-##        access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
     - name: build with restore
       run: |
         pushd ReadMyHosts/
@@ -91,6 +77,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.release }}
+        retention-days: 14
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
 ##    - name: Pack Artifacts
