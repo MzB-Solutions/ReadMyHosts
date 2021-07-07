@@ -96,10 +96,10 @@ jobs:
     - name: Compress Artifacts
       shell: bash
       run: |
-          7z a -tzip "${WORK_PATH}/artifacts/${release}.zip" "${WORK_PATH}/output/*"
+          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on "${WORK_PATH}/artifacts/${release}.7z" "${WORK_PATH}/output/*"
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         body_path: ${{ github.workflow }}-CHANGELOG.txt
         tag_name: ${{ steps.tag_version.outputs.new_tag }}
-        files: ${{ env.WORK_PATH }}/artifacts/${{ env.release }}.zip
+        files: ${{ env.WORK_PATH }}/artifacts/${{ env.release }}.7z
