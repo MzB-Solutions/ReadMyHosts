@@ -1,4 +1,4 @@
-name: Compile debug build
+name: Debug_build
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
 ##          - os: macos-latest
 ##            platform: osx
     env:
-      appVersion: v0.1.7.b${{ github.run_number }}
+      appVersion: v0.1.6.b${{ github.run_number }}
       buildConfig: Debug
       buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
       DOTNET_NOLOGO: true
