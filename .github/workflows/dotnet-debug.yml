@@ -74,7 +74,7 @@ jobs:
     - name: Prep artifact name
       shell: bash
       run: |
-        release="RMH-${tag}-${buildTarget}"
+        release="RMH-${myTag}-${buildTarget}"
         echo "release=$release" >> GITHUB_ENV
     - name: Build with restore
       run: |

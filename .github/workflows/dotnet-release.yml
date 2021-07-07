@@ -57,12 +57,12 @@ jobs:
     - name: Prep tag
       shell: bash
       run: |
-        tag=$(git describe --tags --abbrev=0)
-        echo "tag=$tag" >> $GITHUB_ENV
+        myTag=$(git describe --tags --abbrev=0)
+        echo "myTag=$myTag" >> $GITHUB_ENV
     - name: Prep artifact name
       shell: bash
       run: |
-        release="RMH-${tag}-${buildTarget}"
+        release="RMH-${myTag}-${buildTarget}"
         echo "release=$release" >> GITHUB_ENV
 
 ##    - name: Persist artifact name
