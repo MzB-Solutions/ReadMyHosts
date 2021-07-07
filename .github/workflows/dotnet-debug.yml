@@ -39,6 +39,10 @@ jobs:
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
       WORK_PATH: ${{ github.workspace }}
     steps:
+    - name: Apply PR labels
+      uses: actions/labeler@v2
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
     - name: Checkout Project
       uses: actions/checkout@v2
       with:
