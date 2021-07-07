@@ -29,7 +29,7 @@ jobs:
 ##          - os: macos-latest
 ##            platform: osx
     env:
-      appVersion: v0.1e.b${{ github.run_number }}
+      appVersion: v0.1.7.b${{ github.run_number }}
       buildConfig: Debug
       buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
       DOTNET_NOLOGO: true
@@ -66,10 +66,10 @@ jobs:
         pushd ReadMyHosts/
         dotnet build -v n -c ${{ env.buildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
         popd
-    - name: print debug information
-      run: |
-        printenv
-      shell: bash
+##    - name: print debug information
+##      run: |
+##        printenv
+##      shell: bash
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:

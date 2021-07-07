@@ -67,10 +67,10 @@ jobs:
         pushd ReadMyHosts/
         dotnet build -v n -c ${{ env.BuildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
         popd
-    - name: Print debug information
-      run: |
-        printenv
-      shell: bash
+##    - name: Print debug information
+##      run: |
+##        printenv
+##      shell: bash
     - name: Generate Changelog
       shell: bash
       run: echo "# Good things have arrived" > ${{ github.workflow }}-CHANGELOG.txt
