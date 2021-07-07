@@ -1,4 +1,4 @@
-name: Compile release build
+name: Release_build
 
 on:
   push:
@@ -27,14 +27,14 @@ jobs:
           - os: macos-latest
             platform: osx
     env:
-      appVersion: v0.1.7.${{ github.run_number }}
+      appVersion: v0.1.6
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPOSITORY: MzB-Solutions/ReadMyHosts
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
       DOTNET_NOLOGO: true
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
       WORK_PATH: ${{ github.workspace }}
-      BuildConfig: Release
+      buildConfig: Release
       buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
     steps:
     - name: Apply PR labels
@@ -56,41 +56,50 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.hwBits }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-${{ matrix.hwBits }}-nuget-
-    - name: Prep tag and naming
-      shell: bash
-      run: |
-        ##myTag=$(git describe --tags --abbrev=0)
-        myTag="${appVersion}"
-        release="RMH-${myTag}-${buildTarget}"
-        echo "myTag=${myTag}" >> $GITHUB_ENV
-        echo "release=${release}" >> $GITHUB_ENV
     - name: build with restore
       run: |
         pushd ReadMyHosts/
-        dotnet build -v n -c ${{ env.BuildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
+        dotnet build -v n -c ${{ env.buildConfig }} -r ${{ env.buildTarget}} -o ${{ env.WORK_PATH }}/output/
         popd
 ##    - name: Print debug information
 ##      run: |
 ##        printenv
 ##      shell: bash
-    - name: Generate Changelog
-      shell: bash
-      run: echo "# Good things have arrived" > ${{ github.workflow }}-CHANGELOG.txt
     - name: Bump version and push tag
       id: tag_version
       uses: mathieudutour/github-tag-action@v5.5
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Prep tag and naming
+      shell: bash
+      run: |
+        ##myTag=$(git describe --tags --abbrev=0)
+        ##myTag="${appVersion}"
+        myTag=${{ steps.tag_version.outputs.new_tag }}
+        release="RMH-${myTag}-${buildTarget}"
+        fileName="RMH-${myTag}.${{ github.run_number }}-${buildTarget}"
+        echo "myTag=${myTag}" >> $GITHUB_ENV
+        echo "release=${release}" >> $GITHUB_ENV
+        echo "fileName=${fileName}" >> $GITHUB_ENV
+    - name: Generate Changelog
+      shell: bash
+      run: echo "# Changelog for ${{ steps.tag_version.outputs.new_tag }}" > ${{ github.workflow }}-${{ steps.tag_version.outputs.new_tag }}-CHANGELOG.txt
+    ## This shouldn't really matter except for debugging purposes
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.release }}
-        retention-days: 14
+        name: ${{ env.fileName }}
+        retention-days: 7
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
+    ## This is the one that allows us to release something
+    - name: Compress Artifacts
+      shell: bash
+      run: |
+          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on "${WORK_PATH}/artifacts/${release}.7z" "${WORK_PATH}/output/*"
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         body_path: ${{ github.workflow }}-CHANGELOG.txt
         tag_name: ${{ steps.tag_version.outputs.new_tag }}
-        files: ${{ env.WORK_PATH }}/artifacts/${{ env.release }}.zip
+        files: ${{ env.WORK_PATH }}/artifacts/${{ env.release }}.7z

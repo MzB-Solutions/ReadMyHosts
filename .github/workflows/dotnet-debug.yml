@@ -1,4 +1,4 @@
-name: Compile debug build
+name: Debug_build
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
 ##          - os: macos-latest
 ##            platform: osx
     env:
-      appVersion: v0.1.7.b${{ github.run_number }}
+      appVersion: v0.1.6
       buildConfig: Debug
       buildTarget: ${{ matrix.platform }}-${{ matrix.hwBits }}
       DOTNET_NOLOGO: true
@@ -39,6 +39,10 @@ jobs:
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
       WORK_PATH: ${{ github.workspace }}
     steps:
+    - name: Apply PR labels
+      uses: actions/labeler@v2
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
     - name: Checkout Project
       uses: actions/checkout@v2
       with:
@@ -58,9 +62,11 @@ jobs:
       shell: bash
       run: |
         myTag="${appVersion}"
-        myRelease="RMH-${myTag}-${{ env.buildTarget }}"
+        myRelease="RMH-${myTag}.b${{ github.run_number }}-${{ env.buildTarget }}"
+        fileName="${myRelease}"
         echo "myTag=${myTag}" >> $GITHUB_ENV
         echo "myRelease=${myRelease}" >> $GITHUB_ENV
+        echo "fileName=${fileName}" >> $GITHUB_ENV
     - name: Build with restore
       run: |
         pushd ReadMyHosts/
