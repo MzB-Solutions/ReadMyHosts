@@ -27,7 +27,7 @@ jobs:
           - os: macos-latest
             platform: osx
     env:
-      appVersion: v0.1.6.${{ github.run_number }}
+      appVersion: v0.1.6
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPOSITORY: MzB-Solutions/ReadMyHosts
       PostSharpLicense: ${{ secrets.PS_LICENSE }}
@@ -77,18 +77,26 @@ jobs:
         ##myTag="${appVersion}"
         myTag=${{ steps.tag_version.outputs.new_tag }}
         release="RMH-${myTag}-${buildTarget}"
+        fileName="RMH-${myTag}.${{ github.run_number }}-${buildTarget}"
         echo "myTag=${myTag}" >> $GITHUB_ENV
         echo "release=${release}" >> $GITHUB_ENV
+        echo "fileName=${fileName}" >> $GITHUB_ENV
     - name: Generate Changelog
       shell: bash
       run: echo "# Changelog for ${{ steps.tag_version.outputs.new_tag }}" > ${{ github.workflow }}-${{ steps.tag_version.outputs.new_tag }}-CHANGELOG.txt
+    ## This shouldn't really matter except for debugging purposes
     - name: Create Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.release }}
-        retention-days: 14
+        name: ${{ env.fileName }}
+        retention-days: 7
         path: ${{ env.WORK_PATH }}/output/ # or path/to/artifact
         if-no-files-found: error
+    ## This is the one that allows us to release something
+    - name: Compress Artifacts
+      shell: bash
+      run: |
+          7z a -tzip "${WORK_PATH}/artifacts/${release}.zip" "${WORK_PATH}/output/*"
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
